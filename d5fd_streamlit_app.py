@@ -3,7 +3,7 @@ from d5fd_file_parser import D5FDFileParser
 import io
 
 def main():
-    st.title("D5FD Hex File Parser")
+    st.title("BTI D5FD Record Parser")
     st.write("Upload a hex dump file to parse and view the structured output.")
 
     uploaded_file = st.file_uploader("Choose a hex file", type=["txt"])
