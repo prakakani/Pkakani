@@ -14,7 +14,7 @@ def main():
         if uploaded_file is not None:
             hex_data = uploaded_file.read().decode("utf-8")
     else:
-        hex_data = st.text_area("Paste hex data here", height=500)
+        hex_data = st.text_area("Paste hex data here", height=300)
 
     if hex_data:
         parser = D5FDFileParser()
