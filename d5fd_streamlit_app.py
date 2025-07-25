@@ -26,7 +26,11 @@ def main():
         output_text = output_buffer.getvalue()
 
         st.subheader("Parsed Output")
-        st.text_area("Output", output_text, height=700)
+        st.markdown(
+            f"<div style='overflow-x:auto; white-space:pre-wrap; font-family:monospace; background-color:#f0f0f0; padding:10px; border-radius:5px;'>{output_text}</div>",
+            unsafe_allow_html=True
+        )
+
         st.download_button("Download Output", output_text, file_name="parsed_output.txt", mime="text/plain")
 
 if __name__ == "__main__":
