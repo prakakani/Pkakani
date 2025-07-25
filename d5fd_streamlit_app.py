@@ -3,7 +3,7 @@ from d5fd_file_parser import D5FDFileParser
 import io
 
 def main():
-    st.title("Core Ticketing - D5FD BTI Data Parser")
+    st.title("Core Ticketing-BTI Data Parser")
     st.write("Choose an input method to provide BTI hex data for parsing.")
 
     input_method = st.radio("Choose input method:", ["Upload hex file", "Paste hex data"])
