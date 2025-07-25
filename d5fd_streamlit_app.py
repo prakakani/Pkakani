@@ -2,11 +2,8 @@ import streamlit as st
 from d5fd_file_parser import D5FDFileParser
 import io
 
-# Set wide layout for better screen usage
-st.set_page_config(page_title="BTI D5FD Record Parser", layout="wide")
-
 def main():
-    st.title("BTI D5FD Record Parser")
+    st.title("Core Ticketing - D5FD BTI Data Parser")
     st.write("Choose an input method to provide BTI hex data for parsing.")
 
     input_method = st.radio("Choose input method:", ["Upload hex file", "Paste hex data"])
@@ -17,7 +14,7 @@ def main():
         if uploaded_file is not None:
             hex_data = uploaded_file.read().decode("utf-8")
     else:
-        hex_data = st.text_area("Paste hex data here", height=200)
+        hex_data = st.text_area("Paste hex data here", height=300)
 
     if hex_data:
         parser = D5FDFileParser()
@@ -26,11 +23,7 @@ def main():
         output_text = output_buffer.getvalue()
 
         st.subheader("Parsed Output")
-        st.markdown(
-            f"<div style='overflow-x:auto; white-space:pre-wrap; font-family:monospace; background-color:#f0f0f0; padding:10px; border-radius:5px;'>{output_text}</div>",
-            unsafe_allow_html=True
-        )
-
+        st.text_area("Output", output_text, height=500)
         st.download_button("Download Output", output_text, file_name="parsed_output.txt", mime="text/plain")
 
 if __name__ == "__main__":
