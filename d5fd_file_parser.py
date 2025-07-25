@@ -337,6 +337,108 @@ class D5FDFileParser:
             return self.ebcdic_to_ascii(type_data).strip()
         return "UNK"
 
+    def parse_variable_data_items(self, data, start_offset, output_file):
+        """Parse variable length data items (ND5FDITM)"""
+        if start_offset >= len(data):
+            return
+        
+        # Data item type mappings from D5FD.h (decimal values)
+        data_item_types = {
+            1: ("Transmission Control Number", "Control number for transmission"),
+            2: ("Passenger Name", "Name of the passenger"),
+            4: ("Group or Convention Name", "Group or convention identifier"),
+            6: ("Name Remarks", "Additional name information"),
+            8: ("Telephone Number", "Contact telephone number"),
+            16: ("Frequent Flyer Number", "Loyalty program number"),
+            32: ("Reprinted Ticket Numbers", "Numbers of reprinted tickets"),
+            34: ("Form of Payment", "Payment method details"),
+            36: ("Count of Psgrs Associated With FOP", "Number of passengers for this payment"),
+            37: ("Equivalent Fare Paid Decimal Indicator", "Decimal position indicator"),
+            38: ("Equivalent Fare Paid", "Equivalent fare amount"),
+            40: ("Equivalent Fare Paid Currency Code", "Currency for equivalent fare"),
+            41: ("Tkt/Doc Effective Date", "Document effective date"),
+            48: ("Tkt/Doc Expiration Date", "Document expiration date"),
+            49: ("Booking Class Limitation", "Class restrictions"),
+            50: ("Approval Code", "Payment approval code"),
+            54: ("Tour Code", "Tour package identifier"),
+            56: ("Number of Tickets Exchanged", "Count of exchanged tickets"),
+            57: ("Exchanged Ticket Value Decimal Indicator", "Decimal position for exchange value"),
+            64: ("Issued in Exchange for Ticket Number", "Original ticket number"),
+            66: ("Issued in Exchange for Coupon Numbers", "Original coupon numbers"),
+            68: ("Value of Exchanged Ticket", "Monetary value of exchange"),
+            70: ("Original Issue Ticket Number", "First issue ticket number"),
+            72: ("Date of Original Issue", "Original issue date"),
+            80: ("Place of Original Issue", "Original issue location"),
+            82: ("Form of Payment of Exchanged Ticket(s)", "Payment method for exchanged tickets"),
+            84: ("Exchanged Ticket Currency Code", "Currency for exchanged tickets"),
+            86: ("ATC/IATA Number", "Agent/airline identifier"),
+            88: ("Commission Rate", "Agent commission percentage"),
+            96: ("Total Amount Adjusted", "Total adjustment amount"),
+            97: ("PTA Amounts Decimal Indicator", "PTA decimal position"),
+            98: ("Count of MCO Numbers", "Number of MCO documents"),
+            100: ("MCO Number", "Miscellaneous charges order number"),
+            102: ("Original Fare Currency Code", "Original fare currency"),
+            104: ("Original PTA Total", "Original PTA amount"),
+            112: ("FOP of Each PTA", "Form of payment for each PTA"),
+            113: ("REPS DATA", "Credit card processing data"),
+        }
+        
+        output_file.write("\n" + "=" * 80 + "\n")
+        output_file.write("VARIABLE LENGTH DATA ITEMS (ND5FDITM)\n")
+        output_file.write("=" * 80 + "\n")
+        current_offset = start_offset
+        item_count = 0
+        while current_offset < len(data) - 2:
+            # Read type ID (1 byte)
+            type_id = data[current_offset]
+            
+            # Check for end marker (4E)
+            if type_id == 0x4E:
+                output_file.write(f"\nEnd marker found at offset {current_offset:04X}h\n")
+                break
+                
+            # Skip if we hit zero padding
+            if type_id == 0:
+                current_offset += 1
+                continue
+                
+            # Read total length (2 bytes, big-endian) - includes type + length + data
+            if current_offset + 3 > len(data):
+                break
+                
+            total_length = int.from_bytes(data[current_offset + 1:current_offset + 3], 'big')
+            
+            if total_length < 3 or current_offset + total_length > len(data):
+                break
+            
+            # Data length = total length - 3 (1 byte type + 2 bytes length)
+            data_length = total_length - 3
+            
+            item_count += 1
+            type_name, description = data_item_types.get(type_id, ("Unknown Type", "Unknown data item"))
+            
+            output_file.write(f"\nData Item #{item_count}:\n")
+            output_file.write(f"  Offset:       {current_offset:04X}h\n")
+            output_file.write(f"  Type ID:      {type_id:02X}h ({type_id} decimal)\n")
+            output_file.write(f"  Name:         {type_name}\n")
+            output_file.write(f"  Total Length: {total_length} bytes\n")
+            output_file.write(f"  Data Length:  {data_length} bytes\n")
+            output_file.write(f"  Description:  {description}\n")
+        
+            if data_length > 0:
+                item_data = data[current_offset + 3:current_offset + 3 + data_length]
+                hex_value = item_data.hex().upper()
+                ascii_value = self.ebcdic_to_ascii(item_data)
+                output_file.write(f"  Data:         {hex_value}\n")
+                output_file.write(f"  ASCII:        {ascii_value}\n")
+        
+            # Move to next item using total length
+            current_offset += total_length
+        
+            if item_count >= 20:
+                output_file.write("  ... (truncated after 20 items)\n")
+                break
+                
     def parse_header(self, data, output_file):
         output_file.write("=" * 80 + "\n")
         output_file.write("HEADER FIELDS\n")
@@ -405,7 +507,12 @@ class D5FDFileParser:
                 hex_value = field_data.hex().upper()
                 formatted_value = self.format_value(field_data, field_type)
                 output_file.write(f"{field_name:<12} {abs_offset:04X}h    {length:<8} {hex_value:<32} {formatted_value:<30} {description}\n")
-
+                
+        # Parse variable length data items for TAR records
+        if record_type in ["TAR", "NBT"]:
+            var_data_offset = 0xE8  # Start of variable data
+            self.parse_variable_data_items(data, var_data_offset, output_file)
+            
     def parse_record_to_file(self, hex_input, output_file):
         try:
             data = self.hex_to_bytes(hex_input)
