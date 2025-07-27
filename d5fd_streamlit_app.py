@@ -16,7 +16,7 @@ st.markdown("""
             padding: 30px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            max-width: 1000px;
+            max-width: 100%;
             margin: auto;
             font-size: 14px;
         }
@@ -39,7 +39,7 @@ st.markdown("""
             font-family: monospace;
             white-space: pre-wrap;
             overflow-x: auto;
-            width: 800px;
+            width: 100%;
             font-size: 12px;
         }
         .stTextArea textarea {
@@ -71,6 +71,10 @@ def main():
         output_buffer = io.StringIO()
         parser.parse_record_to_file(hex_data, output_buffer)
         output_text = output_buffer.getvalue()
+
+        # Shorten dashed lines to fit better
+        output_text = output_text.replace("=" * 120, "=" * 80)
+        output_text = output_text.replace("-" * 120, "-" * 80)
 
         st.markdown("<div class='section'>", unsafe_allow_html=True)
         st.subheader("Parsed Output")
