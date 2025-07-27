@@ -127,19 +127,204 @@ class D5FDFileParser:
             ("ND5FDXFC", 0x000, 4, "CHAR", "OFFICE CODE"),
             ("ND5FDXTY", 0x004, 3, "CHAR", "CITY CODE"),
             ("SPARE_COL1", 0x007, 2, "SPARE", "SPARES"),
+            ("ND5FDXLN", 0x009, 1, "BIT", "COLLECTION REPORT NUMBER"),
+            ("ND5FDXLD", 0x00A, 2, "BIN", "COLLECTION REPORT DATE"),
+            ("ND5FDXFD", 0x00C, 2, "BIN", "COLLECTION REPORT FROM DATE"),
+            ("ND5FDXAI", 0x00E, 7, "CHAR", "SUMMARY AGENT ID"),
+            ("ND5FDXID", 0x015, 7, "CHAR", "CLOSEOUT AGENT ID"),
+            ("ND5FDXOD", 0x01C, 2, "BIN", "CLOSEOUT DATE"),
+            ("ND5FDXON", 0x01E, 1, "BIT", "CLOSEOUT NUMBER"),
+            ("ND5FDXI1", 0x01F, 1, "BIT", "AGENT TRANSACTION INDICATOR"),
+            ("ND5FDRDF", 0x020, 1, "CHAR", "COLLECTION REPORT DATA"),
+            ("SPARE_COL2", 0x021, 3, "SPARE", "SPARES"),
+        ]
+
+
+        # MIR structure fields (ND5FDMIR) - for MAR record type - offset from 0x060
+        self.mir_fields = [
+            # Sales Location Group (ND5FDVLO)
+            ("ND5FDVFC", 0x000, 4, "CHAR", "OFFICE LOCATION"),
+            ("ND5FDVTY", 0x004, 3, "CHAR", "CITY CODE"),
+            ("SPARE_MIR1", 0x007, 2, "SPARE", "SPARES - CITY CODE EXPANSION"),
+            
+            # Basic Transaction Info
+            ("ND5FDVID", 0x009, 7, "CHAR", "CREATING AGENT ID"),
+            ("ND5FDVVD", 0x010, 2, "BIN", "ACTIVITY DATE"),
+            ("ND5FDVYM", 0x012, 2, "BIN", "ACTIVITY TIME"),
+            ("ND5FDVOC", 0x014, 14, "CHAR", "DOCUMENT NUMBER"),
+            ("ND5FDVOJ", 0x022, 2, "CHAR", "CONJUNCTION TICKET NUMBER"),
+            ("ND5FDVCR", 0x024, 3, "CHAR", "DOCUMENT CURRENCY CODE"),
+            ("ND5FDVCA", 0x027, 6, "CHAR", "CREDIT CARD APPROVAL CODE"),
+            ("ND5FDVOP", 0x02D, 37, "CHAR", "FORM OF PAYMENT TEXT"),
+            ("ND5FDVOU", 0x052, 2, "BIN", "COUNT OF TRANSACTION CODE ITEMS"),
+            ("ND5FDVTC", 0x054, 2, "BIN", "COUNT OF TAX TYPE ITEMS"),
+            ("ND5FDVCI", 0x056, 1, "CHAR", "DOCUMENT DECIMAL INDICATOR"),
+            ("ND5FDCRD", 0x057, 1, "BIT", "CREDIT CARD RESTRICTIONS"),
+            
+            # Transaction Code Items (3 x 12 bytes)
+            ("ND5FDVVM1", 0x058, 4, "BIN", "TRANSACTION AMOUNT 1"),
+            ("ND5FDVYP1", 0x05C, 3, "CHAR", "TRANSACTION CODE 1"),
+            ("ND5FDVPF1", 0x05F, 1, "CHAR", "PASSENGER FACILITY CHARGE INDICATOR 1"),
+            ("SPARE_CTI1", 0x060, 4, "SPARE", "SPARE BYTES 1"),
+
+            ("ND5FDVVM2", 0x064, 4, "BIN", "TRANSACTION AMOUNT 2"),
+            ("ND5FDVYP2", 0x068, 3, "CHAR", "TRANSACTION CODE 2"),
+            ("ND5FDVPF2", 0x06B, 1, "CHAR", "PASSENGER FACILITY CHARGE INDICATOR 2"),
+            ("SPARE_CTI2", 0x06C, 4, "SPARE", "SPARE BYTES 2"),
+
+            ("ND5FDVVM3", 0x070, 4, "BIN", "TRANSACTION AMOUNT 3"),
+            ("ND5FDVYP3", 0x074, 3, "CHAR", "TRANSACTION CODE 3"),
+            ("ND5FDVPF3", 0x077, 1, "CHAR", "PASSENGER FACILITY CHARGE INDICATOR 3"),
+            ("SPARE_CTI3", 0x078, 4, "SPARE", "SPARE BYTES 3"),
+            
+            # Tax Type Items (3 x 8 bytes)
+            ("ND5FDTTI", 0x07C, 24, "CHAR", "TAX TYPE ITEMS (3x8)"),
+            
+            # Transaction Amounts
+            ("ND5FDVAT", 0x094, 4, "BIN", "TRANSACTION TOTAL AMOUNT"),
+            ("ND5FDVBS", 0x098, 4, "BIN", "ADDITIONAL COLLECTION BASE AMOUNT"),
+            ("SPARE_MIR2", 0x09C, 2, "SPARE", "SPARE BYTES"),
+            ("ND5FDVNT", 0x09E, 2, "BIN", "COUNT OF ADDITIONAL COLLECTION TAX ITEMS"),
+            
+            # Additional Collection Tax Items (3 x 8 bytes)
+            ("ND5FDATE", 0x0A0, 24, "CHAR", "ADDITIONAL COLLECTION TAX ITEMS (3x8)"),
+            
+            ("ND5FDATA", 0x0B8, 4, "BIN", "ADDITIONAL COLLECTION TOTAL AMOUNT"),
+            ("ND5FDVEP", 0x0BC, 2, "BIN", "DEPARTURE DATE"),
+            ("ND5FDVRG", 0x0BE, 3, "CHAR", "ORIGIN STATION"),
+            ("SPARE_MIR3", 0x0C1, 2, "SPARE", "SPARES - STATION CODE EXPANSION"),
+            ("ND5FDACI", 0x0C3, 1, "CHAR", "REPS ACCOUNTING SYSTEM CODE"),
+            
+            # Routing Data (4 x 8 bytes)
+            ("ND5FDVTG", 0x0C4, 32, "CHAR", "ROUTING DATA (4x8)"),            
+            ("ND5FDVDN", 0x0E4, 14, "CHAR", "EXCHANGED DOCUMENT NUMBER"),
+            ("ND5FDVDC", 0x0F2, 1, "BIT", "EXCHANGED DOCUMENT INDICATOR"),
+            ("ND5FDXCG", 0x0F3, 4, "CHAR", "EXCHANGED DOCUMENT INDICATOR DATA"),
+            ("ND5FDVKT", 0x0F7, 14, "CHAR", "TICKET-BY-MAIL TICKET NUMBER"),
+            ("ND5FDVNR", 0x105, 2, "CHAR", "TICKET-BY-MAIL NUMBER RANGE"),
+            ("ND5FDVAM", 0x107, 29, "CHAR", "TICKET-BY-MAIL NAME PURCHASER"),
+            ("ND5FDQCT", 0x124, 4, "BIN", "AMOUNT TENDERED"),
+            ("ND5FDQUR", 0x128, 3, "CHAR", "CURRENCY CODE OF AMOUNT TENDERED"),
+            ("ND5FDQUS", 0x12B, 1, "CHAR", "TENDERED CURRENCY DECIMAL INDICATOR"),
+            # Transaction Code Items (3 x 8 bytes each)
+            ("ND5FDQAM1", 0x12C, 4, "BIN", "TRANSACTION AMOUNT 1"),
+            ("ND5FDQYP1", 0x130, 3, "CHAR", "TRANSACTION CODE 1"),
+            ("SPARE_QT1", 0x133, 1, "SPARE", "SPARE BYTE 1"),
+            ("ND5FDQAM2", 0x134, 4, "BIN", "TRANSACTION AMOUNT 2"),
+            ("ND5FDQYP2", 0x138, 3, "CHAR", "TRANSACTION CODE 2"),
+            ("SPARE_QT2", 0x13B, 1, "SPARE", "SPARE BYTE 2"),
+            ("ND5FDQAM3", 0x13C, 4, "BIN", "TRANSACTION AMOUNT 3"),
+            ("ND5FDQYP3", 0x140, 3, "CHAR", "TRANSACTION CODE 3"),
+            ("SPARE_QT3", 0x143, 1, "SPARE", "SPARE BYTE 3"),
+            # Tax Code Items (3 x 8 bytes each)
+            ("ND5FDQAX1", 0x144, 4, "BIN", "TAX AMOUNT 1"),
+            ("ND5FDQCD1", 0x148, 2, "CHAR", "TAX CODE 1"),
+            ("SPARE_QE1", 0x14A, 2, "SPARE", "SPARE BYTES 1"),
+            ("ND5FDQAX2", 0x14C, 4, "BIN", "TAX AMOUNT 2"),
+            ("ND5FDQCD2", 0x150, 2, "CHAR", "TAX CODE 2"),
+            ("SPARE_QE2", 0x152, 2, "SPARE", "SPARE BYTES 2"),
+            ("ND5FDQAX3", 0x154, 4, "BIN", "TAX AMOUNT 3"),
+            ("ND5FDQCD3", 0x158, 2, "CHAR", "TAX CODE 3"),
+            ("SPARE_QE3", 0x15A, 2, "SPARE", "SPARE BYTES 3"),
+            ("ND5FDQDC", 0x15C, 10, "CHAR", "DOCUMENT CURRENCY EXCHANGE RATE"),
+            ("ND5FDVPC", 0x166, 2, "BIN", "TOTAL PASSENGER COUNT FOR PFC'S"),
+            ("ND5FDCRT", 0x168, 3, "PIC", "COMMISSION RATE FOR GSA TRANSACTIONS"),
+            ("ND5FDREP", 0x16B, 14, "CHAR", "REPRINT DOCUMENT NUMBER"),
+            ("ND5FDCOM", 0x179, 11, "CHAR", "COMMISSION AMOUNT"),
+            ("ND5FDCLT", 0x184, 2, "CHAR", "REPS CARD LEVEL RESULTS"),
+            ("ND5FDFRE", 0x186, 10, "CHAR", "FREQUENT FLYER NUMBER"),
+            ("ND5FDRAS", 0x190, 3, "BIT", "AGENT SET ADDRESS"),
+            ("ND5FDMPS", 0x193, 1, "CHAR", "REPS AUTHORIZATION CHARACTERISTICS INDICATOR"),
+            ("ND5FDMVC", 0x194, 4, "CHAR", "REPS VALIDATION CODE"),
+            ("ND5FDMTR", 0x198, 9, "CHAR", "REPS TRANSACTION ID/BANKNET REFERENCE NUMBER"),
+            ("ND5FDMST", 0x1A1, 2, "CHAR", "REPS AUTHORIZATION RESPONSE/DOWNGRADE INDICATOR"),
+            ("ND5FDRAC", 0x1A3, 1, "CHAR", "REPS AUTHORIZATION SOURCE CODE"),
+            ("ND5FDPOS", 0x1A4, 2, "CHAR", "REPS POS ENTRY MODE"),
+            ("ND5FDBNT", 0x1A6, 2, "BIN", "REPS BANKNET REFERENCE DATE"),
+            ("ND5FDECI", 0x1A8, 2, "CHAR", "REPS ELECTRONIC COMMERCE INDICATOR (ECI)"),
+            ("ND5FDCAV", 0x1AA, 1, "CHAR", "REPS CARDHOLDER AUTHENTICATION VERIFICATION VALUE (CAVV)"),
+            ("ND5FDTIC", 0x1AB, 1, "CHAR", "REPS CARDHOLDER ACTIVATION TERMINAL ID (CAT)"),
+            
+            # Flight Data (4 x 12 bytes)
+            ("ND5FDQFD", 0x1AC, 48, "CHAR", "ROUTING DATA (4x12)"),
+            
+            ("ND5FDVOL", 0x1DC, 1, "CHAR", "VOL/INVOL INDICATOR"),
+            ("ND5FDRSN", 0x1DD, 3, "CHAR", "REASON CODE"),
+            ("ND5FDARD", 0x1E0, 15, "CHAR", "REPS ACQUIRER REFERENCE DATA (ARD)"),
+            ("ND5FDPSD", 0x1EF, 12, "CHAR", "REPS POINT OF SERVICE DATA (PSD)"),
+            ("ND5FDAVS", 0x1FB, 1, "CHAR", "ADDRESS VERIFICATION INDICATOR"),
+            ("ND5FDRL4", 0x1FC, 4, "CHAR", "REPS LAST FOUR DIGITS OF CREDIT CARD NUMBER"),
+            ("ND5FDRSD", 0x200, 1, "CHAR", "REPS ACCOUNT STATUS DATA"),
+            ("SPARE_MIR4", 0x201, 9, "SPARE", "SPARES"),
+            ("ND5FDRTR", 0x20A, 11, "CHAR", "REPS TOKEN REQUESTOR ID DATA"),
+            ("ND5FDRTL", 0x215, 2, "CHAR", "REPS TOKEN ASSURE LEVEL DATA"),
+            ("ND5FDRSI", 0x217, 1, "CHAR", "REPS SPEND QUALIFIED INDICATOR"),
+            ("ND5FDSP1", 0x218, 1, "CHAR", "REPS SECURITY PROTOCOL"),
+            ("ND5FDTRC", 0x219, 2, "CHAR", "REPS TRANSACTION INTEGRITY CLASS (TIC)"),
+            ("ND5FDPAN", 0x21B, 35, "CHAR", "REPS PAYMENT ACCOUNT REFERENCE NUMBER"),
+            ("ND5FDADI", 0x23E, 1, "CHAR", "REPS MARKET SPECIFIC AUTHORIZATION DATA INDICATOR"),
+            ("ND5FDSTA", 0x23F, 6, "CHAR", "REPS SYSTEM TRACE AUDIT NUMBER (STAN)"),
+            ("ND5FDTDC", 0x245, 2, "CHAR", "REPS TRANSACTION DATA CONDITION CODE"),
+            ("ND5FDPS2", 0x247, 13, "CHAR", "REPS POS DATA"),
+            ("ND5FDPRC", 0x254, 6, "CHAR", "REPS PROCESSING CODE"),
+            ("ND5FDCAN", 0x25A, 1, "CHAR", "REPS CARDHOLDER AUTHENTICATION"),
+            ("ND5FDSCI", 0x25B, 1, "CHAR", "REPS STORED CREDENTIAL INDICATOR"),
+            ("ND5FDAAV", 0x25C, 32, "CHAR", "REPS ACCOUNTHOLDER AUTHENTICATION VALUE"),
+            ("ND5FDSTI", 0x27C, 36, "CHAR", "REPS DIRECTORY SERVER TRANSACTION ID"),
+            ("ND5FDPPC", 0x2A0, 1, "CHAR", "REPS PROGRAM PROTOCOL"),
+            
+            # Contactless REPS Data - Individual Fields within ND5FDCRP Group
+            ("ND5FDAAM", 0x2A1, 13, "CHAR", "TAG=9F02 AUTHORIZED AMOUNT"),
+            ("ND5FDAIP", 0x2AE, 4, "CHAR", "TAG=82 APPLICATION INTERCHANGE PROFILE"),
+            ("ND5FDARC", 0x2B2, 16, "CHAR", "TAG=9F26 APPLICATION REQUEST CRYPTOGRAM"),
+            ("ND5FDATC", 0x2C2, 4, "CHAR", "TAG=9F36 APPLICATION TRANSACTION COUNTER"),
+            ("ND5FDAUC", 0x2C6, 4, "CHAR", "TAG=5F2A AUTHORIZATION CURRENCY CODE"),
+            ("ND5FDADT", 0x2CA, 6, "CHAR", "TAG=9A AUTHORIZATION DATE"),
+            ("ND5FDCDT", 0x2D0, 2, "CHAR", "TAG=9F27 CRYPTOGRAM INFORMATION DATA"),
+            ("ND5FDCTT", 0x2D2, 2, "CHAR", "TAG=9C CRYPTOGRAM TRANSACTION TYPE"),
+            ("ND5FDCSN", 0x2D4, 3, "CHAR", "TAG=5F34 CARD SEQUENCE NUMBER"),
+            ("ND5FDCVM", 0x2D7, 6, "CHAR", "TAG=9F34 CARDHOLDER VERIFICATION METHOD"),
+            ("ND5FDCCC", 0x2DD, 1, "CHAR", "CHIP CONDITION CODE"),
+            ("ND5FDDFN", 0x2DE, 32, "CHAR", "TAG=84 DEDICATED FILE NAME"),
+            ("ND5FDDTC", 0x2FE, 2, "CHAR", "DEVICE TYPE"),
+            ("ND5FDFFT", 0x300, 8, "CHAR", "TAG=9F6E FORM FACTOR"),
+            ("ND5FDIFD", 0x308, 16, "CHAR", "TAG=9F1E INTERFACE DEVICE (IFD) SERIAL NO"),
+            ("ND5FDIAD", 0x318, 64, "CHAR", "TAG=9F10 ISSUER APPLICATION DATA (IAD)"),
+            ("ND5FDIRO", 0x358, 24, "CHAR", "TAG=71 ISSUER SCRIPT RESULTS PART I"),
+            ("ND5FDIRT", 0x370, 18, "CHAR", "TAG=72 ISSUER SCRIPT RESULTS PART II"),
+            ("ND5FDTKD", 0x382, 2, "CHAR", "TAG=9F53 TRANSACTION CATEGORY CODE"),
+            ("ND5FDTSC", 0x384, 8, "CHAR", "TAG=9F41 TRANSACTION SEQUENCE COUNTER"),
+            ("ND5FDTAV", 0x38C, 4, "CHAR", "TAG=9F09 TERMINAL APPLICATION VERSION NO"),
+            ("ND5FDTCP", 0x390, 6, "CHAR", "TAG=9F33 TERMINAL CAPABILITIES PROFILE"),
+            ("ND5FDTCO", 0x396, 4, "CHAR", "TAG=9F1A TERMINAL COUNTRY CODE"),
+            ("ND5FDTTD", 0x39A, 6, "CHAR", "TAG=9A TERMINAL TRANSMISSION DATE"),
+            ("ND5FDTTY", 0x3A0, 2, "CHAR", "TAG=9F35 TERMINAL TYPE"),
+            ("ND5FDTVR", 0x3A2, 10, "CHAR", "TAG=95 TERMINAL VERIFICATION RESULTS"),
+            ("ND5FDUNN", 0x3AC, 8, "CHAR", "TAG=9F37 UNPREDICTABLE NUMBER"),
+            ("ND5FDMPE", 0x3B4, 32, "CHAR", "PAYMENT REFERENCE ID"),
+
+            # Fill remaining space to complete 3998 bytes  
+            ("MIR_REMAINING", 0x3D4, 3998-0x3D4, "SPARE", "REMAINING MIR STRUCTURE DATA"),
         ]
         
         # MAR structure fields (ND5FDMAR) - offset from 0x060
         self.mar_fields = [
+            # Fixed length fields (880 bytes)
             ("SPARE_MAR1", 0x000, 2, "SPARE", "SPARES"),
+            
+            # Ticketing City Information
             ("ND5FDMCI", 0x002, 3, "CHAR", "TICKETING CITY"),
             ("SPARE_MAR2", 0x005, 3, "SPARE", "SPARES"),
             ("ND5FDMTG", 0x008, 2, "CHAR", "TICKETING TELETYPE ADDRESS"),
             ("ND5FDMAL", 0x00A, 2, "CHAR", "TICKETING AIRLINE"),
             ("SPARE_MAR3", 0x00C, 2, "SPARE", "SPARES"),
-            ("ND5FDMNS", 0x00E, 29, "CHAR", "PASSENGER NAME 1"),
+            
+            # Passenger Names (2 x 29 bytes)
+            ("ND5FDMNS1", 0x00E, 29, "CHAR", "PASSENGER NAME 1"),
             ("ND5FDMNS2", 0x02B, 29, "CHAR", "PASSENGER NAME 2"),
             ("SPARE_MAR4", 0x048, 2, "SPARE", "SPARES"),
+            
+            # MCO Number Information
             ("ND5FDMMN", 0x04A, 14, "CHAR", "MCO NUMBER"),
             ("ND5FDMDN", 0x058, 1, "CHAR", "DUPE MCO NBR INDICATOR"),
             ("SPARE_MAR5", 0x059, 1, "SPARE", "SPARE"),
@@ -147,6 +332,8 @@ class D5FDFileParser:
             ("SPARE_MAR6", 0x068, 2, "SPARE", "SPARES"),
             ("ND5FDMID", 0x06A, 7, "CHAR", "ISSUE DATE"),
             ("SPARE_MAR7", 0x071, 1, "SPARE", "SPARE"),
+            
+            # Activity Information
             ("ND5FDMCT", 0x072, 3, "CHAR", "CITY"),
             ("SPARE_MAR8", 0x075, 3, "SPARE", "SPARES"),
             ("ND5FDMSI", 0x078, 2, "CHAR", "SELLING TELETYPE ADDRESS"),
@@ -164,11 +351,120 @@ class D5FDFileParser:
             ("ND5FDMTM", 0x096, 4, "CHAR", "TIME (Local)"),
             ("ND5FDMAD", 0x09A, 6, "CHAR", "AGENT SET ADDRESS"),
             ("SPARE_MAR13", 0x0A0, 6, "SPARE", "SPARES"),
+            
+            # Base Fare Amount
             ("ND5FDMBC", 0x0A6, 3, "CHAR", "BASE FARE CURRENCY CODE"),
             ("SPARE_MAR14", 0x0A9, 1, "SPARE", "SPARE"),
             ("ND5FDMBI", 0x0AA, 1, "CHAR", "BASE FARE DECIMAL INDICATOR"),
             ("SPARE_MAR15", 0x0AB, 1, "SPARE", "SPARE"),
-            ("ND5FDMBA", 0x0AC, 8, "PIC", "FARE AMOUNT"),
+            ("ND5FDMBA", 0x0AC, 8, "PIC", "BASE FARE AMOUNT"),
+            
+            # Equivalent Fare Paid
+            ("ND5FDMEC", 0x0B4, 3, "CHAR", "EQUIVALENT FARE CURRENCY CODE"),
+            ("SPARE_MAR16", 0x0B7, 1, "SPARE", "SPARE"),
+            ("ND5FDMEA", 0x0B8, 8, "PIC", "EQUIVALENT FARE AMOUNT"),
+            ("SPARE_MAR17", 0x0C0, 2, "SPARE", "SPARES"),
+            
+            # Tax Amounts
+            ("ND5FDMFC", 0x0C2, 2, "CHAR", "FIRST TAX CODE"),
+            ("SPARE_MAR18", 0x0C4, 2, "SPARE", "SPARES"),
+            ("ND5FDMFX", 0x0C6, 6, "PIC", "FIRST TAX AMOUNT"),
+            ("SPARE_MAR19", 0x0CC, 2, "SPARE", "SPARES"),
+            ("ND5FDMSC", 0x0CE, 2, "CHAR", "SECOND TAX CODE"),
+            ("SPARE_MAR20", 0x0D0, 2, "SPARE", "SPARES"),
+            ("ND5FDMSX", 0x0D2, 6, "PIC", "SECOND TAX AMOUNT"),
+            ("SPARE_MAR21", 0x0D8, 2, "SPARE", "SPARES"),
+            ("SPARE_MAR22", 0x0DA, 2, "SPARE", "SPARES"),
+            ("ND5FDMTE", 0x0DC, 2, "CHAR", "THIRD TAX CODE"),
+            ("SPARE_MAR23", 0x0DE, 2, "SPARE", "SPARES"),
+            ("ND5FDMTX", 0x0E0, 6, "PIC", "THIRD TAX AMOUNT"),
+            ("SPARE_MAR24", 0x0E6, 14, "SPARE", "SPARES"),
+            
+            # Totals
+            ("ND5FDMCC", 0x0F4, 3, "CHAR", "TICKET TOTAL CURRENCY CODE"),
+            ("SPARE_MAR25", 0x0F7, 1, "SPARE", "SPARE"),
+            ("ND5FDMTO", 0x0F8, 8, "PIC", "TICKET TOTAL"),
+            ("SPARE_MAR26", 0x100, 2, "SPARE", "SPARES"),
+            ("ND5FDMMC", 0x102, 3, "CHAR", "MISCELLANEOUS TOTAL CURRENCY CODE"),
+            ("SPARE_MAR27", 0x105, 1, "SPARE", "SPARE"),
+            ("ND5FDMMA", 0x106, 8, "PIC", "MISCELLANEOUS TOTAL"),
+            ("SPARE_MAR28", 0x10E, 2, "SPARE", "SPARES"),
+            ("ND5FDMPC", 0x110, 3, "CHAR", "PTA TOTAL CURRENCY CODE"),
+            ("SPARE_MAR29", 0x113, 1, "SPARE", "SPARE"),
+            ("ND5FDMPI", 0x114, 1, "CHAR", "PTA Total Decimal Indicator"),
+            ("SPARE_MAR30", 0x115, 1, "SPARE", "SPARE"),
+            ("ND5FDMPA", 0x116, 8, "PIC", "PTA TOTAL"),
+            
+            # Service Charge
+            ("ND5FDMSO", 0x11E, 3, "CHAR", "Service Charge CURRENCY CODE"),
+            ("SPARE_MAR31", 0x121, 1, "SPARE", "SPARE"),
+            ("ND5FDMSA", 0x122, 6, "PIC", "Service Charge Amount"),
+            ("SPARE_MAR32", 0x128, 2, "SPARE", "SPARES"),
+            
+            # Purchaser Information
+            ("ND5FDMPN", 0x12A, 29, "CHAR", "PURCHASER NAME"),
+            ("SPARE_MAR33", 0x147, 1, "SPARE", "SPARE"),
+            ("ND5FDMPR", 0x148, 175, "CHAR", "PURCHASER ADDRESS"),
+            ("SPARE_MAR34", 0x1F7, 1, "SPARE", "SPARE"),
+            ("ND5FDMPP", 0x1F8, 80, "CHAR", "PURCHASER PHONE"),
+            ("ND5FDMCP", 0x248, 29, "CHAR", "CARD PRESENTED BY NAME"),
+            ("SPARE_MAR35", 0x265, 1, "SPARE", "SPARE"),
+            ("ND5FDMIA", 0x266, 8, "CHAR", "IATA NUMBER"),
+            ("SPARE_MAR36", 0x26E, 2, "SPARE", "SPARES"),
+            
+            # Commission
+            ("ND5FDMIN", 0x270, 1, "CHAR", "COMMISSION TYPE INDICATOR"),
+            ("SPARE_MAR37", 0x271, 1, "SPARE", "SPARE"),
+            ("ND5FDMCN", 0x272, 11, "PIC", "COMMISSION RATE OR AMOUNT"),
+            ("SPARE_MAR38", 0x27D, 1, "SPARE", "SPARE"),
+            
+            # Form of Payment
+            ("ND5FDMFO", 0x27E, 58, "CHAR", "FORM OF PAYMENT"),
+            ("ND5FDMCA", 0x2B8, 6, "CHAR", "CREDIT CARD APPROVAL CODE"),
+            ("SPARE_MAR39", 0x2BE, 4, "SPARE", "SPARES"),
+            
+            # Residual Value
+            ("ND5FDMRC", 0x2C2, 3, "CHAR", "TOTAL RESIDUAL VALUE CURRENCY CODE"),
+            ("SPARE_MAR40", 0x2C5, 1, "SPARE", "SPARE"),
+            ("ND5FDMRA", 0x2C6, 8, "PIC", "TOTAL RESIDUAL VALUE AMOUNT"),
+            ("SPARE_MAR41", 0x2CE, 2, "SPARE", "SPARES"),
+            
+            # Remarks and Routing
+            ("ND5FDMRI", 0x2D0, 57, "CHAR", "REMARKS INFORMATION"),
+            ("ND5FDMRT", 0x309, 57, "CHAR", "ROUTING INFORMATION"),
+            
+            # Flight Information
+            ("ND5FDMFD", 0x342, 2, "BIN", "FLIGHT DATE"),
+            ("ND5FDMCD", 0x344, 2, "CHAR", "AIRLINE CODE"),
+            ("SPARE_MAR42", 0x346, 2, "SPARE", "SPARES"),
+            ("ND5FDMBO", 0x348, 3, "CHAR", "BOARDING CITY"),
+            ("SPARE_MAR43", 0x34B, 3, "SPARE", "SPARES"),
+            ("ND5FDMFN", 0x34E, 2, "BIT", "FLIGHT NUMBER"),
+            
+            # Bankers Rate
+            ("ND5FDMBR", 0x350, 15, "PIC", "BANKERS BUYING RATE"),
+            ("SPARE_MAR44", 0x35F, 1, "SPARE", "SPARE"),
+            
+            # Activity Indicators
+            ("ND5FDMCR", 0x360, 1, "CHAR", "NEWLY CREATED PTA"),
+            ("SPARE_MAR45", 0x361, 1, "SPARE", "SPARE"),
+            ("ND5FDMCM", 0x362, 1, "CHAR", "UPDATE TO CHANGE MCO NBR"),
+            ("SPARE_MAR46", 0x363, 1, "SPARE", "SPARE"),
+            ("ND5FDMUS", 0x364, 1, "CHAR", "UPDATE AND PNR SPLIT"),
+            ("SPARE_MAR47", 0x365, 1, "SPARE", "SPARE"),
+            ("ND5FDMUP", 0x366, 1, "CHAR", "UPDATE AND PNR NOT SPLIT"),
+            ("SPARE_MAR48", 0x367, 1, "SPARE", "SPARE"),
+            ("ND5FDMSP", 0x368, 1, "CHAR", "PTA NOT UPDATED BUT PNR SPLIT"),
+            ("SPARE_MAR49", 0x369, 1, "SPARE", "SPARE"),
+            ("ND5FDMDR", 0x36A, 1, "CHAR", "DELTA SOLD PTA CREDIT CARD REFUND"),
+            ("SPARE_MAR50", 0x36B, 1, "SPARE", "SPARE"),
+            ("ND5FDMRD", 0x36C, 1, "CHAR", "OTHER REFUND"),
+            ("SPARE_MAR51", 0x36D, 1, "SPARE", "SPARE"),
+            ("ND5FDMMS", 0x36E, 1, "CHAR", "MISCELLANEOUS FUNDS USED"),
+            ("SPARE_MAR52", 0x36F, 1, "SPARE", "SPARE"),
+            
+            # Start of variable data items
+            ("ND5FDMDI", 0x370, 1, "CHAR", "START OF PREPAID DATA ITEMS"),
         ]
         
         # VOI structure fields (ND5FDVOI) - offset from 0x060
@@ -247,7 +543,57 @@ class D5FDFileParser:
             ("ND5FDRM2", 0x392, 30, "CHAR", "SECOND LINE OF REMARKS"),
             ("ND5FDRRD", 0x3B0, 7, "CHAR", "REFUND REQUEST DATE"),
             ("ND5FDARF", 0x3B7, 1, "BIT", "CREDIT CARD RESTRICTIONS"),
+            ("SPARE_REF1", 0x3B8, 8, "SPARE", "SPARES"),
+            
+            # Refund Taxes (99 x 16 bytes each) - break down first few entries
+            ("ND5FD99C1", 0x3C0, 2, "CHAR", "TAX CODE 1"),
+            ("SPARE_TX1", 0x3C2, 3, "SPARE", "SPARES 1"),
+            ("ND5FD99T1", 0x3C5, 11, "CHAR", "TAX AMOUNT 1"),
+            
+            ("ND5FD99C2", 0x3D0, 2, "CHAR", "TAX CODE 2"),
+            ("SPARE_TX2", 0x3D2, 3, "SPARE", "SPARES 2"),
+            ("ND5FD99T2", 0x3D5, 11, "CHAR", "TAX AMOUNT 2"),
+            
+            ("ND5FD99C3", 0x3E0, 2, "CHAR", "TAX CODE 3"),
+            ("SPARE_TX3", 0x3E2, 3, "SPARE", "SPARES 3"),
+            ("ND5FD99T3", 0x3E5, 11, "CHAR", "TAX AMOUNT 3"),
+            
+            # Remaining 96 tax entries (96 x 16 = 1536 bytes)
+            ("ND5FDTXS_REMAINING", 0x3F0, 1536, "CHAR", "REMAINING REFUND TAXES (96x16)"),
+            
+            # Tax Surcharge Data (99 x 5 bytes each) - break down first few
+            ("ND5FDOBT1", 0x9F0, 2, "CHAR", "FEE CODE 1"),
+            ("ND5FDOBS1", 0x9F2, 3, "CHAR", "FEE SUBCODE 1"),
+            
+            ("ND5FDOBT2", 0x9F5, 2, "CHAR", "FEE CODE 2"),
+            ("ND5FDOBS2", 0x9F7, 3, "CHAR", "FEE SUBCODE 2"),
+            
+            ("ND5FDOBT3", 0x9FA, 2, "CHAR", "FEE CODE 3"),
+            ("ND5FDOBS3", 0x9FC, 3, "CHAR", "FEE SUBCODE 3"),
+            
+            # Remaining 96 surcharge entries (96 x 5 = 480 bytes)
+            ("ND5FDOBA_REMAINING", 0x9FF, 480, "CHAR", "REMAINING TAX SURCHARGE DATA (96x5)"),
+            
+            ("ND5FDRPE", 0xBDF, 32, "CHAR", "PAYMENT REFERENCE ID"),
         ]
+
+        # Variable length data items structure (ND5FDITM)
+        # Used by both TAR records (at ND5FDTDF offset) and PAR records (at ND5FDMDI offset)
+        self.variable_data_item_fields = [
+            ("ND5FDTID", 0x000, 1, "BIT", "Data Item Type - ID"),
+            ("ND5FDTCT", 0x001, 2, "BIN", "Byte count of this data item"),
+            ("ND5FDVTD", 0x003, 1, "CHAR", "Start of Variable Length Text (1-1400 bytes)"),
+        ]
+
+    def get_variable_data_offset(self, record_type):
+        """Get the offset where variable length data items start"""
+        if record_type in ["TAR", "NBT"]:
+            return 0x060 + 0x088  # TAR structure + ND5FDTDF offset
+        elif record_type == "PAR":
+            return 0x060 + 0x370  # MAR structure + ND5FDMDI offset
+        else:
+            return None  # No variable data for other record types
+
 
     def parse_displaced_input(self, input_data):
         """Parse input data with displacement offsets"""
@@ -331,6 +677,11 @@ class D5FDFileParser:
         """Check if field contains all EBCDIC spaces (0x40)"""
         return all(byte == 0x40 for byte in field_data)
 
+    def is_blank_or_zero_field(self, field_data):
+        """Check if field contains all EBCDIC spaces (0x40) or all zeros"""
+        return (all(byte == 0x40 for byte in field_data) or 
+                all(byte == 0x00 for byte in field_data))
+
     def get_record_type(self, data):
         if len(data) > 0x022:
             type_data = data[0x020:0x023]
@@ -349,45 +700,77 @@ class D5FDFileParser:
             4: ("Group or Convention Name", "Group or convention identifier"),
             6: ("Name Remarks", "Additional name information"),
             8: ("Telephone Number", "Contact telephone number"),
+            10: ("TBM Mailing Address", "Ticket-by-mail mailing address"),
+            12: ("TBM Billing Address", "Ticket-by-mail billing address"),
+            14: ("Date Ticket Mailed", "Date ticket was mailed"),
             16: ("Frequent Flyer Number", "Loyalty program number"),
-            32: ("Reprinted Ticket Numbers", "Numbers of reprinted tickets"),
-            34: ("Form of Payment", "Payment method details"),
-            36: ("Count of Psgrs Associated With FOP", "Number of passengers for this payment"),
-            37: ("Equivalent Fare Paid Decimal Indicator", "Decimal position indicator"),
-            38: ("Equivalent Fare Paid", "Equivalent fare amount"),
-            40: ("Equivalent Fare Paid Currency Code", "Currency for equivalent fare"),
-            41: ("Tkt/Doc Effective Date", "Document effective date"),
-            48: ("Tkt/Doc Expiration Date", "Document expiration date"),
-            49: ("Booking Class Limitation", "Class restrictions"),
-            50: ("Approval Code", "Payment approval code"),
-            54: ("Tour Code", "Tour package identifier"),
-            56: ("Number of Tickets Exchanged", "Count of exchanged tickets"),
-            57: ("Exchanged Ticket Value Decimal Indicator", "Decimal position for exchange value"),
-            64: ("Issued in Exchange for Ticket Number", "Original ticket number"),
-            66: ("Issued in Exchange for Coupon Numbers", "Original coupon numbers"),
-            68: ("Value of Exchanged Ticket", "Monetary value of exchange"),
-            70: ("Original Issue Ticket Number", "First issue ticket number"),
-            72: ("Date of Original Issue", "Original issue date"),
-            80: ("Place of Original Issue", "Original issue location"),
-            82: ("Form of Payment of Exchanged Ticket(s)", "Payment method for exchanged tickets"),
-            84: ("Exchanged Ticket Currency Code", "Currency for exchanged tickets"),
-            86: ("ATC/IATA Number", "Agent/airline identifier"),
-            88: ("Commission Rate", "Agent commission percentage"),
-            96: ("Total Amount Adjusted", "Total adjustment amount"),
-            97: ("PTA Amounts Decimal Indicator", "PTA decimal position"),
-            98: ("Count of MCO Numbers", "Number of MCO documents"),
-            100: ("MCO Number", "Miscellaneous charges order number"),
-            102: ("Original Fare Currency Code", "Original fare currency"),
-            104: ("Original PTA Total", "Original PTA amount"),
-            112: ("FOP of Each PTA", "Form of payment for each PTA"),
-            113: ("REPS DATA", "Credit card processing data"),
+            20: ("Reprinted Ticket Numbers", "Numbers of reprinted tickets"),
+            22: ("Form of Payment", "Payment method details"),
+            24: ("Count of Psgrs Associated With FOP", "Number of passengers for this payment"),
+            25: ("Equivalent Fare Paid Decimal Indicator", "Decimal position indicator"),
+            26: ("Equivalent Fare Paid", "Equivalent fare amount"),
+            28: ("Equivalent Fare Paid Currency Code", "Currency for equivalent fare"),
+            29: ("Tkt/Doc Effective Date", "Document effective date"),
+            30: ("Tkt/Doc Expiration Date", "Document expiration date"),
+            31: ("Booking Class Limitation", "Class restrictions"),
+            32: ("Approval Code", "Payment approval code"),
+            36: ("Tour Code", "Tour package identifier"),
+            38: ("Number of Tickets Exchanged", "Count of exchanged tickets"),
+            39: ("Exchanged Ticket Value Decimal Indicator", "Decimal position for exchange value"),
+            40: ("Issued in Exchange for Ticket Number", "Original ticket number"),
+            42: ("Issued in Exchange for Coupon Numbers", "Original coupon numbers"),
+            44: ("Value of Exchanged Ticket", "Monetary value of exchange"),
+            46: ("Original Issue Ticket Number", "First issue ticket number"),
+            48: ("Date of Original Issue", "Original issue date"),
+            50: ("Place of Original Issue", "Original issue location"),
+            52: ("Form of Payment of Exchanged Ticket(s)", "Payment method for exchanged tickets"),
+            54: ("Exchanged Ticket Currency Code", "Currency for exchanged tickets"),
+            56: ("ATC/IATA Number", "Agent/airline identifier"),
+            58: ("Commission Rate", "Agent commission percentage"),
+            60: ("Total Amount Adjusted", "Total adjustment amount"),
+            61: ("PTA Amounts Decimal Indicator", "PTA decimal position"),
+            62: ("Count of MCO Numbers", "Number of MCO documents"),
+            64: ("MCO Number", "Miscellaneous charges order number"),
+            66: ("Original Fare Currency Code", "Original fare currency"),
+            68: ("Original PTA Total", "Original PTA amount"),
+            70: ("FOP of Each PTA", "Form of payment for each PTA"),
+            71: ("REPS DATA", "Credit card processing data"),
+            72: ("Fare Calculation", "Fare calculation details"),
+            74: ("Itinerary Segment Data", "Flight segment information"),
+            76: ("Fare Basis", "Fare basis code"),
+            78: ("Connecting/Stopover Code", "Connection/stopover indicator"),
+            80: ("Validity Dates", "Ticket validity dates"),
+            82: ("Seat Assignment", "Assigned seat information"),
+            84: ("Baggage Allowance", "Baggage allowance details"),
+            86: ("Endorsement Box/Penalty", "Endorsement and penalty information"),
+            88: ("Commission Amount", "Commission amount"),
+            89: ("Booking Class/Date", "Booking class and date"),
+            90: ("Reissue Tax Breakdown", "Tax breakdown for reissue"),
+            93: ("Reissue PFC Breakdown", "PFC breakdown for reissue"),
+            94: ("Tax Surcharge Data", "Fee information for Global Collect"),
+            95: ("Document Taxes", "Document tax information"),
+            96: ("GTO Commission Rate", "GTO commission rate"),
+            97: ("GTO Commission Amount", "GTO commission amount"),
+            200: ("Servicing Carrier Accounting Code", "ARC servicing carrier code"),
+            202: ("Servicing Carrier Guarantee Code", "ARC guarantee code"),
+            204: ("Agency Number (ATC/IATA)", "ARC agency number"),
+            206: ("Agency Number Check Digit", "ARC agency check digit"),
+            208: ("Credit Card Contractor Number", "ARC credit card contractor"),
+            210: ("Commission Rate", "ARC commission rate"),
+            212: ("Commission Amount", "ARC commission amount"),
+            214: ("Tax Code (Future)", "ARC future tax code"),
+            216: ("Ticketing Carrier Accounting Code", "ARC ticketing carrier code"),
+            218: ("Domestic/International Code", "ARC domestic/international indicator"),
+            220: ("Self-Sale Code", "ARC self-sale code"),
         }
         
         output_file.write("\n" + "=" * 80 + "\n")
         output_file.write("VARIABLE LENGTH DATA ITEMS (ND5FDITM)\n")
         output_file.write("=" * 80 + "\n")
+
         current_offset = start_offset
         item_count = 0
+
         while current_offset < len(data) - 2:
             # Read type ID (1 byte)
             type_id = data[current_offset]
@@ -438,7 +821,7 @@ class D5FDFileParser:
             if item_count >= 20:
                 output_file.write("  ... (truncated after 20 items)\n")
                 break
-                
+
     def parse_header(self, data, output_file):
         output_file.write("=" * 80 + "\n")
         output_file.write("HEADER FIELDS\n")
@@ -468,7 +851,10 @@ class D5FDFileParser:
         elif record_type == "REF":
             fields = self.ref_fields
             output_file.write("Using REF (Refund) structure\n")
-        elif record_type in ["MAR", "PAR"]:
+        elif record_type == "MAR":
+            fields = self.mir_fields
+            output_file.write("Using MIR (Miscellaneous Transaction Data) structure\n")
+        elif record_type == "PAR":
             fields = self.mar_fields
             output_file.write("Using MAR (Prepaid Accounting Data) structure\n")
         elif record_type == "VOI":
@@ -502,17 +888,17 @@ class D5FDFileParser:
             abs_offset = bti_offset + rel_offset
             if abs_offset + length <= len(data):
                 field_data = data[abs_offset:abs_offset + length]
-                if self.is_blank_field(field_data):
+                if self.is_blank_or_zero_field(field_data):
                     continue
                 hex_value = field_data.hex().upper()
                 formatted_value = self.format_value(field_data, field_type)
                 output_file.write(f"{field_name:<12} {abs_offset:04X}h    {length:<8} {hex_value:<32} {formatted_value:<30} {description}\n")
-                
-        # Parse variable length data items for TAR records
-        if record_type in ["TAR", "NBT"]:
-            var_data_offset = 0xE8  # Start of variable data
-            self.parse_variable_data_items(data, var_data_offset, output_file)
-            
+
+        # Parse variable length data items for TAR and PAR records
+        variable_offset = self.get_variable_data_offset(record_type)
+        if variable_offset and variable_offset < len(data):
+            self.parse_variable_data_items(data, variable_offset, output_file)
+
     def parse_record_to_file(self, hex_input, output_file):
         try:
             data = self.hex_to_bytes(hex_input)
