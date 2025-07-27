@@ -5,7 +5,7 @@ import io
 # Set wide layout and page title
 st.set_page_config(page_title="Core Ticketing - BTI Data Parser", layout="wide")
 
-# Inject custom CSS for colorful styling
+# Inject custom CSS for styling and smaller fonts
 st.markdown("""
     <style>
         body {
@@ -18,10 +18,11 @@ st.markdown("""
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             max-width: 1000px;
             margin: auto;
+            font-size: 14px;
         }
         h1 {
             color: #2c3e50;
-            font-size: 2.5em;
+            font-size: 2.2em;
             text-align: center;
         }
         .section {
@@ -32,13 +33,17 @@ st.markdown("""
         }
         .output-box {
             background-color: #fdfefe;
-            padding: 15px;
+            padding: 10px;
             border-radius: 8px;
             border: 1px solid #ccc;
             font-family: monospace;
             white-space: pre-wrap;
             overflow-x: auto;
             width: 800px;
+            font-size: 12px;
+        }
+        .stTextArea textarea {
+            font-size: 12px !important;
         }
     </style>
 """, unsafe_allow_html=True)
@@ -57,7 +62,7 @@ def main():
         if uploaded_file is not None:
             hex_data = uploaded_file.read().decode("utf-8")
     else:
-        hex_data = st.text_area("Paste hex data here", height=300)
+        hex_data = st.text_area("Paste hex data here", height=250)
 
     st.markdown("</div>", unsafe_allow_html=True)
 
