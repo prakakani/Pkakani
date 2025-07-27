@@ -22,7 +22,7 @@ st.markdown("""
         }
         h1 {
             color: #2c3e50;
-            font-size: 2.2em;
+            font-size: 1.8em;
             text-align: center;
         }
         .section {
@@ -72,9 +72,14 @@ def main():
         parser.parse_record_to_file(hex_data, output_buffer)
         output_text = output_buffer.getvalue()
 
-        # Shorten dashed lines to fit better
+        # Shorten dashed lines and column headers
         output_text = output_text.replace("=" * 120, "=" * 80)
         output_text = output_text.replace("-" * 120, "-" * 80)
+        output_text = output_text.replace("Field Name", "Field")
+        output_text = output_text.replace("Offset", "Off")
+        output_text = output_text.replace("Length", "Len")
+        output_text = output_text.replace("HEX Value", "Hex")
+        output_text = output_text.replace("Description", "Desc")
 
         st.markdown("<div class='section'>", unsafe_allow_html=True)
         st.subheader("Parsed Output")
