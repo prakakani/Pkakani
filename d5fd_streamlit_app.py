@@ -23,7 +23,7 @@ st.markdown("""
         }
         h1 {
             color: #2c3e50;
-            font-size: 1.8em;
+            font-size: 1.4em;
             text-align: center;
         }
         .section {
