@@ -138,7 +138,7 @@ def format_output_with_dynamic_widths(output_text):
 
 def main():
     st.markdown("<div class='main-container'>", unsafe_allow_html=True)
-    st.markdown("<h1>Core Ticketing – BTI Data Parser</h1>", unsafe_allow_html=True)
+    st.markdown("<h1>Core Ticketing - BTI Parser</h1>", unsafe_allow_html=True)
     st.markdown("<div class='section'>", unsafe_allow_html=True)
     st.write("Choose an input method to provide BTI hex data for parsing.")
 
