@@ -827,8 +827,8 @@ class D5FDFileParser:
             # Move to next item using total length
             current_offset += total_length
         
-            if item_count >= 20:
-                output_file.write("  ... (truncated after 20 items)\n")
+            if item_count >= 30:
+                output_file.write("  ... (truncated after 30 items)\n")
                 break
 
     def parse_header(self, data, output_file):
