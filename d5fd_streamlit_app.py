@@ -73,8 +73,8 @@ def main():
         output_text = output_buffer.getvalue()
 
         # Shorten dashed lines and column headers
-        output_text = output_text.replace("=" * 120, "=" * 80)
-        output_text = output_text.replace("-" * 120, "-" * 80)
+        output_text = output_text.replace("=" * 60, "=" * 40)
+        output_text = output_text.replace("-" * 60, "-" * 40)
         output_text = output_text.replace("Field Name", "Field")
         output_text = output_text.replace("Offset", "Off")
         output_text = output_text.replace("Length", "Len")
