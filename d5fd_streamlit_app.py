@@ -15,11 +15,11 @@ st.markdown("""
         .main-container {
             background-color: #ffffff;
             padding: 20px;
-            border-radius: 10px;
+            border-radius: 5px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             max-width: 100%;
             margin: auto;
-            font-size: 10px;
+            font-size: 5px;
         }
         h1 {
             color: #2c3e50;
@@ -28,9 +28,9 @@ st.markdown("""
         }
         .section {
             background-color: #eaf2f8;
-            padding: 10px;
+            padding: 5px;
             border-radius: 4px;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
         .output-box {
             background-color: #fdfefe;
