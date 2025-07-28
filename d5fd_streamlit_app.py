@@ -1,6 +1,7 @@
 import streamlit as st
 from d5fd_file_parser import D5FDFileParser
 import io
+import re
 
 # Set wide layout and page title
 st.set_page_config(page_title="Core Ticketing - BTI Data Parser", layout="wide")
@@ -48,6 +49,50 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
+def format_output_for_display(output_text):
+    """Format the output to prevent column overlap"""
+    lines = output_text.split('\n')
+    processed_lines = []
+    
+    for line in lines:
+        # Handle header line
+        if 'Field Name' in line and 'Offset' in line and 'Length' in line:
+            processed_lines.append(f"{'Field':<10} {'Offset':<8} {'Len':<4} {'Hex':<16} {'Value':<20} {'Description'}")
+        elif line.startswith('-'):
+            processed_lines.append('-' * 80)
+        elif line.startswith('='):
+            processed_lines.append('=' * 80)
+        else:
+            # Handle data lines - look for pattern: FieldName Offset Length HexValue Value Description
+            parts = line.split()
+            if len(parts) >= 6 and parts[1].endswith('h'):
+                field_name = parts[0]
+                offset = parts[1]
+                length = parts[2]
+                hex_value = parts[3]
+                
+                # Truncate hex if too long
+                if len(hex_value) > 16:
+                    hex_value = hex_value[:13] + "..."
+                
+                # Find value and description
+                remaining = ' '.join(parts[4:])
+                # Split at first non-hex word for value/description
+                value_desc_match = re.match(r'^([^\s]*)\s+(.*)$', remaining)
+                if value_desc_match:
+                    value = value_desc_match.group(1)[:20]
+                    description = value_desc_match.group(2)
+                else:
+                    value = remaining[:20]
+                    description = ""
+                
+                formatted_line = f"{field_name:<10} {offset:<8} {length:<4} {hex_value:<16} {value:<20} {description}"
+                processed_lines.append(formatted_line)
+            else:
+                processed_lines.append(line)
+    
+    return '\n'.join(processed_lines)
+
 def main():
     st.markdown("<div class='main-container'>", unsafe_allow_html=True)
     st.markdown("<h1>Core Ticketing – BTI Data Parser</h1>", unsafe_allow_html=True)
@@ -72,28 +117,12 @@ def main():
         parser.parse_record_to_file(hex_data, output_buffer)
         output_text = output_buffer.getvalue()
 
-        # Shorten headers and lines
-        output_text = output_text.replace("=" * 120, "=" * 80)
-        output_text = output_text.replace("-" * 120, "-" * 80)
-        output_text = output_text.replace("Field Name", "Field")
-        output_text = output_text.replace("Offset", "Offset")
-        output_text = output_text.replace("Length", "Length")
-        output_text = output_text.replace("HEX Value", "Hex")
-        output_text = output_text.replace("Description", "Description")
-        
-        # Adjust column spacing
-        lines = output_text.split('\n')
-        processed_lines = []
-        for line in lines:
-            if 'Field' in line and 'Off' in line and 'Len' in line and 'Hex' in line:
-                processed_lines.append(f"{'Field':<8} {'Offset':<4} {'Length':<3} {'Hex':<10} {'Value':<10} {'Description'}")
-            else:
-                processed_lines.append(line)
-        output_text = '\n'.join(processed_lines)
+        # Format output for better display
+        formatted_output = format_output_for_display(output_text)
 
         st.markdown("<div class='section'>", unsafe_allow_html=True)
         st.subheader("Parsed Output")
-        st.code(output_text, language=None)
+        st.code(formatted_output, language=None)
         st.download_button("Download Output", output_text, file_name="parsed_output.txt", mime="text/plain")
         st.markdown("</div>", unsafe_allow_html=True)
 
