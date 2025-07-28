@@ -86,7 +86,7 @@ def main():
         processed_lines = []
         for line in lines:
             if 'Field' in line and 'Off' in line and 'Len' in line and 'Hex' in line:
-                processed_lines.append(f"{'Field':<10} {'Off':<6} {'Len':<4} {'Hex':<20} {'Value':<20} {'Desc'}")
+                processed_lines.append(f"{'Field':<10} {'Offset':<6} {'Length':<4} {'Hex Value':<20} {'Value':<20} {'Description'}")
             else:
                 processed_lines.append(line)
         output_text = '\n'.join(processed_lines)
