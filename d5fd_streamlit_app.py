@@ -14,23 +14,23 @@ st.markdown("""
         }
         .main-container {
             background-color: #ffffff;
-            padding: 30px;
+            padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             max-width: 100%;
             margin: auto;
-            font-size: 14px;
+            font-size: 10px;
         }
         h1 {
             color: #2c3e50;
-            font-size: 1.4em;
+            font-size: 1.2em;
             text-align: center;
         }
         .section {
             background-color: #eaf2f8;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
         }
         .output-box {
             background-color: #fdfefe;
@@ -138,7 +138,7 @@ def format_output_with_dynamic_widths(output_text):
 
 def main():
     st.markdown("<div class='main-container'>", unsafe_allow_html=True)
-    st.markdown("<h1>Core Ticketing - BTI Parser</h1>", unsafe_allow_html=True)
+    st.markdown("<h1>Core Ticketing - BTI Data Parser</h1>", unsafe_allow_html=True)
     st.markdown("<div class='section'>", unsafe_allow_html=True)
     st.write("Choose an input method to provide BTI hex data for parsing.")
 
