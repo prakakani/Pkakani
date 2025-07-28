@@ -70,6 +70,14 @@ st.markdown("""
         .stTextArea textarea {
             font-size: 14px !important;
         }
+        .stButton > button {
+            background-color: #007bff !important;
+            color: white !important;
+            border: none !important;
+        }
+        .stButton > button:hover {
+            background-color: #0056b3 !important;
+        }
     </style>
 """, unsafe_allow_html=True)
 
@@ -178,7 +186,7 @@ def main():
             parse_clicked = True  # Auto-parse for uploaded files
     else:
         hex_data = st.text_area("Paste hex data here", height=250)
-        parse_clicked = st.button("Parse Data", type="primary")
+        parse_clicked = st.button("Parse Data")
 
     st.markdown("</div>", unsafe_allow_html=True)
 
