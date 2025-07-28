@@ -834,11 +834,20 @@ class D5FDFileParser:
 
     def get_header_config(self):
         configs = {
-            "small": {"sep_width": 40, "table_width": 60, "hex_width": 16, "value_width": 15},
+            "small": {
+                "sep_width": 30, 
+                "table_width": 45, 
+                "hex_width": 10, 
+                "value_width": 8,
+                "field_width": 8,
+                "offset_width": 6,
+                "length_width": 4
+            },
             "normal": {"sep_width": 80, "table_width": 120, "hex_width": 32, "value_width": 30},
             "large": {"sep_width": 120, "table_width": 160, "hex_width": 40, "value_width": 35}
         }
-        return configs.get(self.header_size, configs["normal"])
+        return configs.get(self.header_size, configs["small"])
+
 
     def parse_header(self, data, output_file):
         config = self.get_header_config()
