@@ -183,4 +183,46 @@ def format_output_with_dynamic_widths(output_text):
             if not found_data:
                 processed_lines.append(line)
     
-    return '\n'.join(processed_lines
+    return '\n'.join(processed_lines)
+
+def main():
+    st.markdown("<div class='main-container'>", unsafe_allow_html=True)
+    st.markdown("<h1>Core Ticketing - BTI Data Parser</h1>", unsafe_allow_html=True)
+    st.markdown("<div class='section'>", unsafe_allow_html=True)
+    st.write("Choose an input method to provide BTI hex data for parsing.")
+
+    input_method = st.radio("Choose input method:", ["Upload hex file", "Paste hex data"])
+
+    hex_data = ""
+    parse_clicked = False
+    
+    if input_method == "Upload hex file":
+        uploaded_file = st.file_uploader("Upload a hex file", type=["txt"])
+        if uploaded_file is not None:
+            hex_data = uploaded_file.read().decode("utf-8")
+            parse_clicked = True  # Auto-parse for uploaded files
+    else:
+        hex_data = st.text_area("Paste hex data here", height=250)
+        parse_clicked = st.button("Parse Data")
+
+    st.markdown("</div>", unsafe_allow_html=True)
+
+    if hex_data and parse_clicked:
+        parser = D5FDFileParser()
+        output_buffer = io.StringIO()
+        parser.parse_record_to_file(hex_data, output_buffer)
+        output_text = output_buffer.getvalue()
+
+        # Format with dynamic column widths
+        formatted_output = format_output_with_dynamic_widths(output_text)
+
+        st.markdown("<div class='section'>", unsafe_allow_html=True)
+        st.subheader("Parsed Output")
+        st.code(formatted_output, language=None)
+        st.download_button("Download Output", output_text, file_name="parsed_output.txt", mime="text/plain")
+        st.markdown("</div>", unsafe_allow_html=True)
+
+    st.markdown("</div>", unsafe_allow_html=True)
+
+if __name__ == "__main__":
+    main()
