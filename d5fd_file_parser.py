@@ -773,9 +773,9 @@ class D5FDFileParser:
             220: ("Self-Sale Code", "ARC self-sale code"),
         }
         
-        output_file.write("\n" + "=" * 80 + "\n")
+        output_file.write("\n" + "=" * 40 + "\n")
         output_file.write("VARIABLE LENGTH DATA ITEMS (ND5FDITM)\n")
-        output_file.write("=" * 80 + "\n")
+        output_file.write("=" * 40 + "\n")
 
         current_offset = start_offset
         item_count = 0
