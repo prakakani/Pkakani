@@ -62,25 +62,24 @@ def format_output_with_dynamic_widths(output_text):
     max_value_width = len("Value")
     
     for line in lines:
-        # Skip headers, separators, and empty lines
-        if (line.startswith('=') or line.startswith('-') or 
-            'Field' in line or not line.strip() or
-            'HEADER FIELDS' in line or 'STRUCTURE' in line or
-            'Using' in line or 'VARIABLE LENGTH' in line):
-            continue
-            
-        # Parse data lines
+        # Look for data lines with the pattern: FieldName OffsetH Length HexValue Value Description
         parts = line.split()
-        if len(parts) >= 6 and parts[1].endswith('h'):
+        if len(parts) >= 5 and len(parts[0]) > 0 and parts[1].endswith('h') and parts[2].isdigit():
             field_name = parts[0]
             offset = parts[1]
             length = parts[2]
             hex_value = parts[3]
             
-            # Find value (next non-description part)
+            # Find value and description
             remaining = ' '.join(parts[4:])
-            value_match = re.match(r'^([^\s]+)', remaining)
-            value = value_match.group(1) if value_match else ""
+            # Split at first space after non-space characters for value
+            value_match = re.match(r'^(\S+)\s*(.*)', remaining)
+            if value_match:
+                value = value_match.group(1)
+                description = value_match.group(2)
+            else:
+                value = remaining
+                description = ""
             
             # Update max widths
             max_field_width = max(max_field_width, len(field_name))
@@ -89,9 +88,9 @@ def format_output_with_dynamic_widths(output_text):
             max_hex_width = max(max_hex_width, len(hex_value))
             max_value_width = max(max_value_width, len(value))
             
-            data_lines.append((field_name, offset, length, hex_value, value, remaining[len(value):].strip()))
+            data_lines.append((field_name, offset, length, hex_value, value, description))
     
-    # Add padding
+    # Add padding to widths
     max_field_width += 2
     max_offset_width += 2
     max_length_width += 2
@@ -102,18 +101,18 @@ def format_output_with_dynamic_widths(output_text):
     processed_lines = []
     
     for line in lines:
-        if 'Field Name' in line and 'Offset' in line and 'Length' in line:
-            # Create dynamic header
-            header = (f"{'Field':<{max_field_width}} "
-                     f"{'Offset':<{max_offset_width}} "
-                     f"{'Len':<{max_length_width}} "
-                     f"{'Hex':<{max_hex_width}} "
-                     f"{'Value':<{max_value_width}} "
+        # Handle header lines
+        if ('Field Name' in line or 'Field' in line) and 'Offset' in line and ('Length' in line or 'Len' in line):
+            header = (f"{'Field':<{max_field_width}}"
+                     f"{'Offset':<{max_offset_width}}"
+                     f"{'Len':<{max_length_width}}"
+                     f"{'Hex':<{max_hex_width}}"
+                     f"{'Value':<{max_value_width}}"
                      f"Description")
             processed_lines.append(header)
         elif line.startswith('-'):
             # Create dynamic separator
-            total_width = max_field_width + max_offset_width + max_length_width + max_hex_width + max_value_width + 20
+            total_width = max_field_width + max_offset_width + max_length_width + max_hex_width + max_value_width + 15
             processed_lines.append('-' * min(total_width, 120))
         elif line.startswith('='):
             processed_lines.append('=' * 80)
@@ -122,11 +121,11 @@ def format_output_with_dynamic_widths(output_text):
             found_data = False
             for data in data_lines:
                 if line.startswith(data[0]) and data[1] in line:
-                    formatted_line = (f"{data[0]:<{max_field_width}} "
-                                    f"{data[1]:<{max_offset_width}} "
-                                    f"{data[2]:<{max_length_width}} "
-                                    f"{data[3]:<{max_hex_width}} "
-                                    f"{data[4]:<{max_value_width}} "
+                    formatted_line = (f"{data[0]:<{max_field_width}}"
+                                    f"{data[1]:<{max_offset_width}}"
+                                    f"{data[2]:<{max_length_width}}"
+                                    f"{data[3]:<{max_hex_width}}"
+                                    f"{data[4]:<{max_value_width}}"
                                     f"{data[5]}")
                     processed_lines.append(formatted_line)
                     found_data = True
