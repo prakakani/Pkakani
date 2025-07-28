@@ -1,6 +1,7 @@
 import streamlit as st
 from d5fd_file_parser import D5FDFileParser
 import io
+import re
 
 # Set wide layout and page title
 st.set_page_config(page_title="Core Ticketing - BTI Data Parser", layout="wide")
@@ -81,15 +82,22 @@ def main():
         output_text = output_text.replace("HEX Value", "Hex")
         output_text = output_text.replace("Description", "Description")
         
-        # Adjust column spacing
+
+        # Align column headers with data using fixed-width formatting
         lines = output_text.split('\n')
         processed_lines = []
         for line in lines:
-            if 'Field' in line and 'Off' in line and 'Len' in line and 'Hex' in line:
-                processed_lines.append(f"{'Field':<8} {'Offset':<4} {'Length':<3} {'Hex':<10} {'Value':<10} {'Description'}")
+            if re.match(r'^Field\\s+Off\\s+Len\\s+Hex\\s+Value\\s+Desc$', line.strip()):
+                processed_lines.append(f"{'Field':<12} {'Off':<6} {'Len':<6} {'Hex':<32} {'Value':<30} {'Desc'}")
+            elif re.match(r'^[A-Z0-9_]+\\s+[0-9A-F]+h\\s+\\d+\\s+[0-9A-F]+\\s+.*', line.strip()):
+                parts = re.split(r'\\s{2,}', line.strip())
+                if len(parts) >= 6:
+                    processed_lines.append(f"{parts[0]:<12} {parts[1]:<6} {parts[2]:<6} {parts[3]:<32} {parts[4]:<30} {parts[5]}")
+                else:
+                    processed_lines.append(line)
             else:
                 processed_lines.append(line)
-        output_text = '\n'.join(processed_lines)
+        output_text = '\\n'.join(processed_lines)
 
         st.markdown("<div class='section'>", unsafe_allow_html=True)
         st.subheader("Parsed Output")
