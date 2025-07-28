@@ -19,7 +19,7 @@ st.markdown("""
             box-shadow: 0 0 5px rgba(0,0,0,0.1);
             max-width: 100%;
             margin: auto;
-            font-size: 5px;
+            font-size: 14px;
         }
         h1 {
             color: #2c3e50;
