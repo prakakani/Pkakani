@@ -76,10 +76,10 @@ def main():
         output_text = output_text.replace("=" * 120, "=" * 80)
         output_text = output_text.replace("-" * 120, "-" * 80)
         output_text = output_text.replace("Field Name", "Field")
-        output_text = output_text.replace("Offset", "Off")
-        output_text = output_text.replace("Length", "Len")
-        output_text = output_text.replace("HEX Value", "Hex")
-        output_text = output_text.replace("Description", "Desc")
+        output_text = output_text.replace("Offset", "Offset")
+        output_text = output_text.replace("Length", "Length")
+        output_text = output_text.replace("HEX Value", "Hex Value")
+        output_text = output_text.replace("Description", "Description")
         
         # Adjust column spacing
         lines = output_text.split('\n')
