@@ -854,7 +854,7 @@ class D5FDFileParser:
         output_file.write("=" * config["sep_width"] + "\n")
         output_file.write("HEADER FIELDS\n")
         output_file.write("=" * config["sep_width"] + "\n")
-        output_file.write(f"{'Field':<{config.get('field_width', 4)}} {'Offset':<{config.get('offset_width', 3)}} {'Len':<{config.get('length_width', 2)}} {'Hex':<{config['hex_width']}} {'Value':<{config['value_width']}} {'Description'}\n")
+        output_file.write(f"{'Field':<{config.get('field_width', 8)}} {'Offset':<{config.get('offset_width', 6)}} {'Len':<{config.get('length_width', 4)}} {'Hex':<{config['hex_width']}} {'Value':<{config['value_width']}} {'Description'}\n")
         output_file.write("-" * config["table_width"] + "\n")
 
         for field_name, offset, length, field_type, description in self.header_fields:
@@ -862,7 +862,7 @@ class D5FDFileParser:
                 field_data = data[offset:offset + length]
                 hex_value = field_data.hex().upper()
                 formatted_value = self.format_value(field_data, field_type)
-                output_file.write(f"{field_name:<12} {offset:04X}h    {length:<8} {hex_value:<{config['hex_width']}} {formatted_value:<{config['value_width']}} {description}\n")
+                output_file.write(f"{field_name:<{config.get('field_width', 8)}} {offset:04X}h {length:<{config.get('length_width', 4)}} {hex_value:<{config['hex_width']}} {formatted_value:<{config['value_width']}} {description}\n")
 
 
     def parse_bti_structure(self, data, record_type, output_file):
@@ -872,7 +872,7 @@ class D5FDFileParser:
         output_file.write("\n" + "=" * config["sep_width"] + "\n")
         output_file.write(f"ND5FDBTI STRUCTURE - TYPE: {record_type}\n")
         output_file.write("=" * config["sep_width"] + "\n")
-        output_file.write(f"{'Field':<{config.get('field_width', 4)}} {'Offset':<{config.get('offset_width', 3)}} {'Len':<{config.get('length_width', 2)}} {'Hex':<{config['hex_width']}} {'Value':<{config['value_width']}} {'Description'}\n")
+        output_file.write(f"{'Field':<{config.get('field_width', 8)}} {'Offset':<{config.get('offset_width', 6)}} {'Len':<{config.get('length_width', 4)}} {'Hex':<{config['hex_width']}} {'Value':<{config['value_width']}} {'Description'}\n")
         output_file.write("-" * config["table_width"] + "\n")
 
         if record_type in ["TAR", "NBT"]:
@@ -922,7 +922,7 @@ class D5FDFileParser:
                     continue
                 hex_value = field_data.hex().upper()
                 formatted_value = self.format_value(field_data, field_type)
-                output_file.write(f"{field_name:<12} {abs_offset:04X}h    {length:<8} {hex_value:<{config['hex_width']}} {formatted_value:<{config['value_width']}} {description}\n")
+                output_file.write(f"{field_name:<{config.get('field_width', 8)}} {abs_offset:04X}h {length:<{config.get('length_width', 4)}} {hex_value:<{config['hex_width']}} {formatted_value:<{config['value_width']}} {description}\n")
 
         # Parse variable length data items for TAR and PAR records
         variable_offset = self.get_variable_data_offset(record_type)
