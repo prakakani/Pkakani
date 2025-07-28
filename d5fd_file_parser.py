@@ -773,9 +773,9 @@ class D5FDFileParser:
             220: ("Self-Sale Code", "ARC self-sale code"),
         }
         
-        output_file.write("\n" + "=" * 40 + "\n")
+        output_file.write("\n" + "=" * 10 + "\n")
         output_file.write("VARIABLE LENGTH DATA ITEMS (ND5FDITM)\n")
-        output_file.write("=" * 40 + "\n")
+        output_file.write("=" * 10 + "\n")
 
         current_offset = start_offset
         item_count = 0
@@ -832,11 +832,11 @@ class D5FDFileParser:
                 break
 
     def parse_header(self, data, output_file):
-        output_file.write("=" * 20 + "\n")
+        output_file.write("=" * 30 + "\n")
         output_file.write("HEADER FIELDS\n")
-        output_file.write("=" * 20 + "\n")
+        output_file.write("=" * 30 + "\n")
         output_file.write(f"{'Field Name':<12} {'Offset':<8} {'Length':<8} {'HEX Value':<32} {'Value':<30} {'Description'}\n")
-        output_file.write("-" * 20 + "\n")
+        output_file.write("-" * 30 + "\n")
         
         for field_name, offset, length, field_type, description in self.header_fields:
             if offset + length <= len(data):
@@ -848,11 +848,11 @@ class D5FDFileParser:
     def parse_bti_structure(self, data, record_type, output_file):
         bti_offset = 0x060
         
-        output_file.write("\n" + "=" * 20 + "\n")
+        output_file.write("\n" + "=" * 30 + "\n")
         output_file.write(f"ND5FDBTI STRUCTURE - TYPE: {record_type}\n")
-        output_file.write("=" * 20 + "\n")
+        output_file.write("=" * 30 + "\n")
         output_file.write(f"{'Field Name':<12} {'Offset':<8} {'Length':<8} {'HEX Value':<32} {'Value':<30} {'Description'}\n")
-        output_file.write("-" * 20 + "\n")
+        output_file.write("-" * 30 + "\n")
         
         if record_type in ["TAR", "NBT"]:
             fields = self.tar_fields
@@ -919,7 +919,7 @@ class D5FDFileParser:
             record_type = self.get_record_type(data)
             self.parse_bti_structure(data, record_type, output_file)
             
-            output_file.write("\n" + "=" * 80 + "\n")
+            output_file.write("\n" + "=" * 30 + "\n")
             
         except Exception as e:
             output_file.write(f"Error parsing record: {e}\n")
