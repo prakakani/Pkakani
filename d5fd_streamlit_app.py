@@ -72,18 +72,28 @@ def main():
         parser.parse_record_to_file(hex_data, output_buffer)
         output_text = output_buffer.getvalue()
 
-        # Shorten dashed lines and column headers
-        output_text = output_text.replace("=" * 60, "=" * 40)
-        output_text = output_text.replace("-" * 60, "-" * 40)
+        # Shorten headers and lines
+        output_text = output_text.replace("=" * 120, "=" * 80)
+        output_text = output_text.replace("-" * 120, "-" * 80)
         output_text = output_text.replace("Field Name", "Field")
-        output_text = output_text.replace("Offset", "Offset")
-        output_text = output_text.replace("Length", "Lengh")
-        output_text = output_text.replace("HEX Value", "Hex value")
-        output_text = output_text.replace("Description", "Description")
+        output_text = output_text.replace("Offset", "Off")
+        output_text = output_text.replace("Length", "Len")
+        output_text = output_text.replace("HEX Value", "Hex")
+        output_text = output_text.replace("Description", "Desc")
+        
+        # Adjust column spacing
+        lines = output_text.split('\n')
+        processed_lines = []
+        for line in lines:
+            if 'Field' in line and 'Off' in line and 'Len' in line and 'Hex' in line:
+                processed_lines.append(f"{'Field':<10} {'Off':<6} {'Len':<4} {'Hex':<20} {'Value':<20} {'Desc'}")
+            else:
+                processed_lines.append(line)
+        output_text = '\n'.join(processed_lines)
 
         st.markdown("<div class='section'>", unsafe_allow_html=True)
         st.subheader("Parsed Output")
-        st.markdown(f"<div class='output-box'>{output_text}</div>", unsafe_allow_html=True)
+        st.code(output_text, language=None)
         st.download_button("Download Output", output_text, file_name="parsed_output.txt", mime="text/plain")
         st.markdown("</div>", unsafe_allow_html=True)
 
