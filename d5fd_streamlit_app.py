@@ -76,17 +76,17 @@ def main():
         output_text = output_text.replace("=" * 120, "=" * 80)
         output_text = output_text.replace("-" * 120, "-" * 80)
         output_text = output_text.replace("Field Name", "Field")
-        output_text = output_text.replace("Offset", "Offset")
-        output_text = output_text.replace("Length", "Length")
+        output_text = output_text.replace("Offset", "Off")
+        output_text = output_text.replace("Length", "Len")
         output_text = output_text.replace("HEX Value", "Hex")
-        output_text = output_text.replace("Description", "Description")
+        output_text = output_text.replace("Description", "Desc")
         
-        # Adjust column spacing
+        # Adjust column spacing to match data alignment
         lines = output_text.split('\n')
         processed_lines = []
         for line in lines:
             if 'Field' in line and 'Off' in line and 'Len' in line and 'Hex' in line:
-                processed_lines.append(f"{'Field':<8} {'Offset':<4} {'Length':<3} {'Hex':<10} {'Value':<10} {'Description'}")
+                processed_lines.append(f"{'Field':<12} {'Off':<8} {'Len':<8} {'Hex':<32} {'Value':<30} {'Desc'}")
             else:
                 processed_lines.append(line)
         output_text = '\n'.join(processed_lines)
