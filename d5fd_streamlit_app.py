@@ -41,10 +41,10 @@ st.markdown("""
             white-space: pre-wrap;
             overflow-x: auto;
             width: 100%;
-            font-size: 10px;
+            font-size: 12px;
         }
         .stTextArea textarea {
-            font-size: 10px !important;
+            font-size: 12px !important;
         }
     </style>
 """, unsafe_allow_html=True)
