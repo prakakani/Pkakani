@@ -559,8 +559,16 @@ class D5FDFileParser:
             ("SPARE_TX3", 0x3E2, 3, "SPARE", "SPARES 3"),
             ("ND5FD99T3", 0x3E5, 11, "CHAR", "TAX AMOUNT 3"),
             
-            # Remaining 96 tax entries (96 x 16 = 1536 bytes)
-            ("ND5FDTXS_REMAINING", 0x3F0, 1536, "CHAR", "REMAINING REFUND TAXES (96x16)"),
+            ("ND5FD99C4", 0x3F0, 2, "CHAR", "TAX CODE 4"),
+            ("SPARE_TX4", 0x3F2, 3, "SPARE", "SPARES 4"),
+            ("ND5FD99T4", 0x3F5, 11, "CHAR", "TAX AMOUNT 4"),
+
+            ("ND5FD99C5", 0x400, 2, "CHAR", "TAX CODE 5"),
+            ("SPARE_TX5", 0x402, 3, "SPARE", "SPARES 5"),
+            ("ND5FD99T5", 0x405, 11, "CHAR", "TAX AMOUNT 5"),
+            
+            # Remaining 94 tax entries (94 x 16 = 1504 bytes)
+            ("ND5FDTXS_REMAINING", 0x410, 1504, "CHAR", "REMAINING REFUND TAXES (94x16)"),
             
             # Tax Surcharge Data (99 x 5 bytes each) - break down first few
             ("ND5FDOBT1", 0x9F0, 2, "CHAR", "FEE CODE 1"),
