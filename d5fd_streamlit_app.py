@@ -9,6 +9,9 @@ st.set_page_config(page_title="Core Ticketing - BTI Data Parser", layout="wide")
 # Inject custom CSS for styling and smaller fonts
 st.markdown("""
     <style>
+        header[data-testid="stHeader"] {
+            display: none;
+        }
         body {
             background-color: #f4f8fc;
         }
