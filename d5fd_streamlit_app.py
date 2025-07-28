@@ -16,7 +16,7 @@ st.markdown("""
             background-color: #ffffff;
             padding: 20px;
             border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
             max-width: 100%;
             margin: auto;
             font-size: 5px;
@@ -34,17 +34,17 @@ st.markdown("""
         }
         .output-box {
             background-color: #fdfefe;
-            padding: 10px;
-            border-radius: 8px;
+            padding: 5px;
+            border-radius: 5px;
             border: 1px solid #ccc;
             font-family: monospace;
             white-space: pre-wrap;
             overflow-x: auto;
             width: 100%;
-            font-size: 12px;
+            font-size: 10px;
         }
         .stTextArea textarea {
-            font-size: 12px !important;
+            font-size: 10px !important;
         }
     </style>
 """, unsafe_allow_html=True)
