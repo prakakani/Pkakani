@@ -832,11 +832,11 @@ class D5FDFileParser:
                 break
 
     def parse_header(self, data, output_file):
-        output_file.write("=" * 20 + "\n")
+        output_file.write("=" * 40 + "\n")
         output_file.write("HEADER FIELDS\n")
-        output_file.write("=" * 20 + "\n")
+        output_file.write("=" * 40 + "\n")
         output_file.write(f"{'Field Name':<12} {'Offset':<8} {'Length':<8} {'HEX Value':<32} {'Value':<30} {'Description'}\n")
-        output_file.write("-" * 40 + "\n")
+        output_file.write("-" * 80 + "\n")
         
         for field_name, offset, length, field_type, description in self.header_fields:
             if offset + length <= len(data):
@@ -848,11 +848,11 @@ class D5FDFileParser:
     def parse_bti_structure(self, data, record_type, output_file):
         bti_offset = 0x060
         
-        output_file.write("\n" + "=" * 80 + "\n")
+        output_file.write("\n" + "=" * 40 + "\n")
         output_file.write(f"ND5FDBTI STRUCTURE - TYPE: {record_type}\n")
-        output_file.write("=" * 80 + "\n")
+        output_file.write("=" * 40 + "\n")
         output_file.write(f"{'Field Name':<12} {'Offset':<8} {'Length':<8} {'HEX Value':<32} {'Value':<30} {'Description'}\n")
-        output_file.write("-" * 120 + "\n")
+        output_file.write("-" * 80 + "\n")
         
         if record_type in ["TAR", "NBT"]:
             fields = self.tar_fields
@@ -891,7 +891,7 @@ class D5FDFileParser:
                 output_file.write(f"Raw BTI Data: {raw_data.hex().upper()}\n")
             return
         
-        output_file.write("-" * 120 + "\n")
+        output_file.write("-" * 80 + "\n")
         
         for field_name, rel_offset, length, field_type, description in fields:
             abs_offset = bti_offset + rel_offset
