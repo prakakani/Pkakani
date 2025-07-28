@@ -78,7 +78,7 @@ def main():
         output_text = output_text.replace("Field Name", "Field")
         output_text = output_text.replace("Offset", "Offset")
         output_text = output_text.replace("Length", "Length")
-        output_text = output_text.replace("HEX Value", "Hex Value")
+        output_text = output_text.replace("HEX Value", "Hex")
         output_text = output_text.replace("Description", "Description")
         
         # Adjust column spacing
@@ -86,7 +86,7 @@ def main():
         processed_lines = []
         for line in lines:
             if 'Field' in line and 'Off' in line and 'Len' in line and 'Hex' in line:
-                processed_lines.append(f"{'Field':<9} {'Offset':<4} {'Length':<3} {'Hex Value':<15} {'Value':<20} {'Description'}")
+                processed_lines.append(f"{'Field':<8} {'Offset':<4} {'Length':<3} {'Hex':<15} {'Value':<20} {'Description'}")
             else:
                 processed_lines.append(line)
         output_text = '\n'.join(processed_lines)
