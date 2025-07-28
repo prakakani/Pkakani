@@ -78,6 +78,15 @@ st.markdown("""
         .stButton > button:hover {
             background-color: #0056b3 !important;
         }
+        .stRadio > div {
+            flex-direction: row;
+        }
+        .stRadio > div > label > div:first-child {
+            background-color: #007bff !important;
+        }
+        .stRadio > div > label > div:first-child > div {
+            background-color: white !important;
+        }
     </style>
 """, unsafe_allow_html=True)
 
