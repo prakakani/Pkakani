@@ -854,7 +854,7 @@ class D5FDFileParser:
         output_file.write("=" * config["sep_width"] + "\n")
         output_file.write("HEADER FIELDS\n")
         output_file.write("=" * config["sep_width"] + "\n")
-        output_file.write(f"{'Field Name':<12} {'Offset':<8} {'Length':<8} {'HEX Value':<{config['hex_width']}} {'Value':<{config['value_width']}} {'Description'}\n")
+        output_file.write(f"{'Field':<{config.get('field_width', 8)}} {'Offset':<{config.get('offset_width', 6)}} {'Len':<{config.get('length_width', 4)}} {'Hex':<{config['hex_width']}} {'Value':<{config['value_width']}} {'Description'}\n")
         output_file.write("-" * config["table_width"] + "\n")
 
         for field_name, offset, length, field_type, description in self.header_fields:
