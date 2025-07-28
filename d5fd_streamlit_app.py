@@ -12,6 +12,27 @@ st.markdown("""
         header[data-testid="stHeader"] {
             display: none;
         }
+        .stApp > header {
+            display: none;
+        }
+        .stDeployButton {
+            display: none;
+        }
+        div[data-testid="stToolbar"] {
+            display: none;
+        }
+        div[data-testid="stDecoration"] {
+            display: none;
+        }
+        div[data-testid="stStatusWidget"] {
+            display: none;
+        }
+        #MainMenu {
+            display: none;
+        }
+        footer {
+            display: none;
+        }
         body {
             background-color: #f4f8fc;
         }
@@ -148,16 +169,20 @@ def main():
     input_method = st.radio("Choose input method:", ["Upload hex file", "Paste hex data"])
 
     hex_data = ""
+    parse_clicked = False
+    
     if input_method == "Upload hex file":
         uploaded_file = st.file_uploader("Upload a hex file", type=["txt"])
         if uploaded_file is not None:
             hex_data = uploaded_file.read().decode("utf-8")
+            parse_clicked = True  # Auto-parse for uploaded files
     else:
-        hex_data = st.text_area("Paste hex data here and click anywhere outside the box", height=250)
+        hex_data = st.text_area("Paste hex data here", height=250)
+        parse_clicked = st.button("Parse Data", type="primary")
 
     st.markdown("</div>", unsafe_allow_html=True)
 
-    if hex_data:
+    if hex_data and parse_clicked:
         parser = D5FDFileParser()
         output_buffer = io.StringIO()
         parser.parse_record_to_file(hex_data, output_buffer)
