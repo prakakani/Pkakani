@@ -44,7 +44,7 @@ st.markdown("""
             font-size: 12px;
         }
         .stTextArea textarea {
-            font-size: 12px !important;
+            font-size: 14px !important;
         }
     </style>
 """, unsafe_allow_html=True)
