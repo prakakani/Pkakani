@@ -9,32 +9,30 @@ st.set_page_config(page_title="Core Ticketing - BTI Data Parser", layout="wide")
 st.markdown("""
     <style>
         body {
-            background-color: #003366;
-            color: white;
+            background-color: #f4f8fc;
         }
         .main-container {
-            background-color: #003366;
+            background-color: #ffffff;
             padding: 30px;
             border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
             max-width: 100%;
             margin: auto;
             font-size: 14px;
-            color: white;
         }
         h1 {
-            color: white;
-            font-size: 2em;
+            color: #2c3e50;
+            font-size: 1.8em;
             text-align: center;
         }
         .section {
-            background-color: #0055A4;
+            background-color: #eaf2f8;
             padding: 20px;
             border-radius: 8px;
             margin-bottom: 20px;
-            color: white;
         }
         .output-box {
-            background-color: #002244;
+            background-color: #fdfefe;
             padding: 10px;
             border-radius: 8px;
             border: 1px solid #ccc;
@@ -43,12 +41,9 @@ st.markdown("""
             overflow-x: auto;
             width: 100%;
             font-size: 12px;
-            color: white;
         }
         .stTextArea textarea {
             font-size: 12px !important;
-            background-color: #002244;
-            color: white;
         }
     </style>
 """, unsafe_allow_html=True)
