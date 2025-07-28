@@ -835,8 +835,8 @@ class D5FDFileParser:
     def get_header_config(self):
         configs = {
             "small": {
-                "sep_width": 30, 
-                "table_width": 45, 
+                "sep_width": 20, 
+                "table_width": 20, 
                 "hex_width": 10, 
                 "value_width": 8,
                 "field_width": 8,
