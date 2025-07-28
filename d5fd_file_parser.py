@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python3
 """
 D5FD File-based Parser Tool
@@ -558,7 +557,7 @@ class D5FDFileParser:
             ("ND5FD99C3", 0x3E0, 2, "CHAR", "TAX CODE 3"),
             ("SPARE_TX3", 0x3E2, 3, "SPARE", "SPARES 3"),
             ("ND5FD99T3", 0x3E5, 11, "CHAR", "TAX AMOUNT 3"),
-            
+
             ("ND5FD99C4", 0x3F0, 2, "CHAR", "TAX CODE 4"),
             ("SPARE_TX4", 0x3F2, 3, "SPARE", "SPARES 4"),
             ("ND5FD99T4", 0x3F5, 11, "CHAR", "TAX AMOUNT 4"),
@@ -773,9 +772,9 @@ class D5FDFileParser:
             220: ("Self-Sale Code", "ARC self-sale code"),
         }
         
-        output_file.write("\n" + "=" * 10 + "\n")
+        output_file.write("\n" + "=" * 80 + "\n")
         output_file.write("VARIABLE LENGTH DATA ITEMS (ND5FDITM)\n")
-        output_file.write("=" * 10 + "\n")
+        output_file.write("=" * 80 + "\n")
 
         current_offset = start_offset
         item_count = 0
@@ -832,11 +831,11 @@ class D5FDFileParser:
                 break
 
     def parse_header(self, data, output_file):
-        output_file.write("=" * 30 + "\n")
+        output_file.write("=" * 80 + "\n")
         output_file.write("HEADER FIELDS\n")
-        output_file.write("=" * 30 + "\n")
+        output_file.write("=" * 80 + "\n")
         output_file.write(f"{'Field Name':<12} {'Offset':<8} {'Length':<8} {'HEX Value':<32} {'Value':<30} {'Description'}\n")
-        output_file.write("-" * 30 + "\n")
+        output_file.write("-" * 120 + "\n")
         
         for field_name, offset, length, field_type, description in self.header_fields:
             if offset + length <= len(data):
@@ -848,11 +847,11 @@ class D5FDFileParser:
     def parse_bti_structure(self, data, record_type, output_file):
         bti_offset = 0x060
         
-        output_file.write("\n" + "=" * 30 + "\n")
+        output_file.write("\n" + "=" * 80 + "\n")
         output_file.write(f"ND5FDBTI STRUCTURE - TYPE: {record_type}\n")
-        output_file.write("=" * 30 + "\n")
+        output_file.write("=" * 80 + "\n")
         output_file.write(f"{'Field Name':<12} {'Offset':<8} {'Length':<8} {'HEX Value':<32} {'Value':<30} {'Description'}\n")
-        output_file.write("-" * 30 + "\n")
+        output_file.write("-" * 120 + "\n")
         
         if record_type in ["TAR", "NBT"]:
             fields = self.tar_fields
@@ -891,7 +890,7 @@ class D5FDFileParser:
                 output_file.write(f"Raw BTI Data: {raw_data.hex().upper()}\n")
             return
         
-        output_file.write("-" * 80 + "\n")
+        output_file.write("-" * 120 + "\n")
         
         for field_name, rel_offset, length, field_type, description in fields:
             abs_offset = bti_offset + rel_offset
@@ -919,7 +918,7 @@ class D5FDFileParser:
             record_type = self.get_record_type(data)
             self.parse_bti_structure(data, record_type, output_file)
             
-            output_file.write("\n" + "=" * 30 + "\n")
+            output_file.write("\n" + "=" * 80 + "\n")
             
         except Exception as e:
             output_file.write(f"Error parsing record: {e}\n")
