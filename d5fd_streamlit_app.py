@@ -150,7 +150,7 @@ def main():
         if uploaded_file is not None:
             hex_data = uploaded_file.read().decode("utf-8")
     else:
-        hex_data = st.text_area("Paste hex data here", height=250)
+        hex_data = st.text_area("Paste hex data here and click anywhere outside the box", height=250)
 
     st.markdown("</div>", unsafe_allow_html=True)
 
