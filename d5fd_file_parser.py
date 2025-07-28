@@ -10,7 +10,8 @@ import sys
 import os
 
 class D5FDFileParser:
-    def __init__(self):
+    def __init__(self, header_size="small"):
+        self.header_size = header_size
         # Main header fields
         self.header_fields = [
             # Standard Header (ND5FDHDR)
@@ -772,9 +773,10 @@ class D5FDFileParser:
             220: ("Self-Sale Code", "ARC self-sale code"),
         }
         
-        output_file.write("\n" + "=" * 80 + "\n")
+        config = self.get_header_config()
+        output_file.write("\n" + "=" * config["sep_width"] + "\n")
         output_file.write("VARIABLE LENGTH DATA ITEMS (ND5FDITM)\n")
-        output_file.write("=" * 80 + "\n")
+        output_file.write("=" * config["sep_width"] + "\n")
 
         current_offset = start_offset
         item_count = 0
@@ -830,29 +832,40 @@ class D5FDFileParser:
                 output_file.write("  ... (truncated after 30 items)\n")
                 break
 
+    def get_header_config(self):
+        configs = {
+            "small": {"sep_width": 40, "table_width": 60, "hex_width": 16, "value_width": 15},
+            "normal": {"sep_width": 80, "table_width": 120, "hex_width": 32, "value_width": 30},
+            "large": {"sep_width": 120, "table_width": 160, "hex_width": 40, "value_width": 35}
+        }
+        return configs.get(self.header_size, configs["normal"])
+
     def parse_header(self, data, output_file):
-        output_file.write("=" * 80 + "\n")
+        config = self.get_header_config()
+        output_file.write("=" * config["sep_width"] + "\n")
         output_file.write("HEADER FIELDS\n")
-        output_file.write("=" * 80 + "\n")
-        output_file.write(f"{'Field Name':<12} {'Offset':<8} {'Length':<8} {'HEX Value':<32} {'Value':<30} {'Description'}\n")
-        output_file.write("-" * 120 + "\n")
-        
+        output_file.write("=" * config["sep_width"] + "\n")
+        output_file.write(f"{'Field Name':<12} {'Offset':<8} {'Length':<8} {'HEX Value':<{config['hex_width']}} {'Value':<{config['value_width']}} {'Description'}\n")
+        output_file.write("-" * config["table_width"] + "\n")
+
         for field_name, offset, length, field_type, description in self.header_fields:
             if offset + length <= len(data):
                 field_data = data[offset:offset + length]
                 hex_value = field_data.hex().upper()
                 formatted_value = self.format_value(field_data, field_type)
-                output_file.write(f"{field_name:<12} {offset:04X}h    {length:<8} {hex_value:<32} {formatted_value:<30} {description}\n")
+                output_file.write(f"{field_name:<12} {offset:04X}h    {length:<8} {hex_value:<{config['hex_width']}} {formatted_value:<{config['value_width']}} {description}\n")
+
 
     def parse_bti_structure(self, data, record_type, output_file):
+        config = self.get_header_config()
         bti_offset = 0x060
         
-        output_file.write("\n" + "=" * 80 + "\n")
+        output_file.write("\n" + "=" * config["sep_width"] + "\n")
         output_file.write(f"ND5FDBTI STRUCTURE - TYPE: {record_type}\n")
-        output_file.write("=" * 80 + "\n")
-        output_file.write(f"{'Field Name':<12} {'Offset':<8} {'Length':<8} {'HEX Value':<32} {'Value':<30} {'Description'}\n")
-        output_file.write("-" * 120 + "\n")
-        
+        output_file.write("=" * config["sep_width"] + "\n")
+        output_file.write(f"{'Field Name':<12} {'Offset':<8} {'Length':<8} {'HEX Value':<{config['hex_width']}} {'Value':<{config['value_width']}} {'Description'}\n")
+        output_file.write("-" * config["table_width"] + "\n")
+
         if record_type in ["TAR", "NBT"]:
             fields = self.tar_fields
             output_file.write("Using TAR (Ticket Accounting Record) structure\n")
@@ -890,7 +903,7 @@ class D5FDFileParser:
                 output_file.write(f"Raw BTI Data: {raw_data.hex().upper()}\n")
             return
         
-        output_file.write("-" * 120 + "\n")
+        output_file.write("-" * config["table_width"] + "\n")
         
         for field_name, rel_offset, length, field_type, description in fields:
             abs_offset = bti_offset + rel_offset
@@ -900,7 +913,7 @@ class D5FDFileParser:
                     continue
                 hex_value = field_data.hex().upper()
                 formatted_value = self.format_value(field_data, field_type)
-                output_file.write(f"{field_name:<12} {abs_offset:04X}h    {length:<8} {hex_value:<32} {formatted_value:<30} {description}\n")
+                output_file.write(f"{field_name:<12} {abs_offset:04X}h    {length:<8} {hex_value:<{config['hex_width']}} {formatted_value:<{config['value_width']}} {description}\n")
 
         # Parse variable length data items for TAR and PAR records
         variable_offset = self.get_variable_data_offset(record_type)
@@ -918,7 +931,8 @@ class D5FDFileParser:
             record_type = self.get_record_type(data)
             self.parse_bti_structure(data, record_type, output_file)
             
-            output_file.write("\n" + "=" * 80 + "\n")
+            config = self.get_header_config()
+            output_file.write("\n" + "=" * config["sep_width"] + "\n")
             
         except Exception as e:
             output_file.write(f"Error parsing record: {e}\n")
@@ -927,13 +941,16 @@ def main():
     # Default file names
     input_file = "input.txt"
     output_file = "output.txt"
+    header_size = "small"  # Default header size
     
     # Check if custom file names provided as arguments
     if len(sys.argv) >= 3:
         input_file = sys.argv[1]
         output_file = sys.argv[2]
+    if len(sys.argv) >= 4:
+        header_size = sys.argv[3]  # small, normal, or large
     
-    parser = D5FDFileParser()
+    parser = D5FDFileParser(header_size)
     
     try:
         # Read input file
