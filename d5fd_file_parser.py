@@ -832,11 +832,11 @@ class D5FDFileParser:
                 break
 
     def parse_header(self, data, output_file):
-        output_file.write("=" * 80 + "\n")
+        output_file.write("=" * 60 + "\n")
         output_file.write("HEADER FIELDS\n")
-        output_file.write("=" * 80 + "\n")
+        output_file.write("=" * 60 + "\n")
         output_file.write(f"{'Field Name':<12} {'Offset':<8} {'Length':<8} {'HEX Value':<32} {'Value':<30} {'Description'}\n")
-        output_file.write("-" * 120 + "\n")
+        output_file.write("-" * 80 + "\n")
         
         for field_name, offset, length, field_type, description in self.header_fields:
             if offset + length <= len(data):
