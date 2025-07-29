@@ -59,7 +59,7 @@ st.markdown("""
         }
         .main-container h1 {
             color: white !important;
-            font-size: 20px !important;
+            font-size: 10px !important;
             text-align: center !important;
             margin: 0px !important;
             padding: 10px 0px !important;
@@ -68,7 +68,7 @@ st.markdown("""
         }
         h1 {
             color: white !important;
-            font-size: 20px !important;
+            font-size: 10px !important;
             text-align: center !important;
             margin: 0px !important;
             padding: 10px 0px !important;
@@ -77,12 +77,12 @@ st.markdown("""
         }
         h1 {
             color: white !important;
-            font-size: 28px !important;
+            font-size: 10px !important;
             text-align: center !important;
             margin: 0px !important;
-            padding: 15px 0px !important;
+            padding: 10px 0px !important;
             background-color: #007bff !important;
-            border-radius: 5px !important;
+            border-radius: 2px !important;
         }
         .section {
             background-color: #eaf2f8;
