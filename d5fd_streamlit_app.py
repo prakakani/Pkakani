@@ -9,11 +9,13 @@ st.set_page_config(page_title="Core Ticketing - BTI Data Parser", layout="wide")
 # Inject custom CSS for styling and smaller fonts
 st.markdown("""
     <style>
-        /* Hide all possible header elements */
+        /* Completely hide and remove all header elements */
         header[data-testid="stHeader"] {
             display: none !important;
             visibility: hidden !important;
-            height: 0 !important;
+            height: 0px !important;
+            min-height: 0px !important;
+            max-height: 0px !important;
         }
         .stApp > header {
             display: none !important;
@@ -41,12 +43,19 @@ st.markdown("""
         }
         .stAppViewContainer > .main {
             padding-top: 0rem !important;
+            margin-top: 0rem !important;
         }
         .block-container {
             padding-top: 0rem !important;
+            margin-top: 0rem !important;
+        }
+        .element-container {
+            margin-top: 0rem !important;
         }
         body {
             background-color: #f4f8fc;
+            margin-top: 0px !important;
+            padding-top: 0px !important;
         }
         .main-container {
             background-color: #ffffff;
@@ -54,15 +63,25 @@ st.markdown("""
             border-radius: 5px;
             box-shadow: 0 0 5px rgba(0,0,0,0.1);
             max-width: 100%;
-            margin: auto;
+            margin: 0 auto !important;
+            margin-top: 0px !important;
             font-size: 14px;
         }
         .main-container h1 {
             color: #2c3e50 !important;
-            font-size: 16px !important;
+            font-size: 14px !important;
             text-align: center !important;
             margin: 0px !important;
-            padding: 5px !important;
+            padding: 5px 0px !important;
+            line-height: 1.2 !important;
+        }
+        h1 {
+            color: #2c3e50 !important;
+            font-size: 14px !important;
+            text-align: center !important;
+            margin: 0px !important;
+            padding: 5px 0px !important;
+            line-height: 1.2 !important;
         }
         .section {
             background-color: #eaf2f8;
