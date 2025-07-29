@@ -57,23 +57,23 @@ st.markdown("""
             background-color: #f4f8fc;
             margin-top: 0px !important;
         }
-        .main-container {
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 5px rgba(0,0,0,0.1);
-            max-width: 100%;
-            margin: 0 auto !important;
-            font-size: 14px;
-        }
         .main-container h1 {
             color: white !important;
-            font-size: 28px !important;
+            font-size: 20px !important;
             text-align: center !important;
             margin: 0px !important;
-            padding: 15px 0px !important;
-            background-color: #007bff !important;
-            border-radius: 5px !important;
+            padding: 10px 0px !important;
+            background-color: #1e3a8a !important;
+            border-radius: 2px !important;
+        }
+        h1 {
+            color: white !important;
+            font-size: 20px !important;
+            text-align: center !important;
+            margin: 0px !important;
+            padding: 10px 0px !important;
+            background-color: #1e3a8a !important;
+            border-radius: 2px !important;
         }
         h1 {
             color: white !important;
