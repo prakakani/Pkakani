@@ -10,28 +10,34 @@ st.set_page_config(page_title="Core Ticketing - BTI Data Parser", layout="wide")
 st.markdown("""
     <style>
         header[data-testid="stHeader"] {
-            display: none;
+            display: none !important;
         }
         .stApp > header {
-            display: none;
+            display: none !important;
         }
         .stDeployButton {
-            display: none;
+            display: none !important;
         }
         div[data-testid="stToolbar"] {
-            display: none;
+            display: none !important;
         }
         div[data-testid="stDecoration"] {
-            display: none;
+            display: none !important;
         }
         div[data-testid="stStatusWidget"] {
-            display: none;
+            display: none !important;
         }
         #MainMenu {
-            display: none;
+            display: none !important;
         }
         footer {
-            display: none;
+            display: none !important;
+        }
+        .viewerBadge_container__1QSob {
+            display: none !important;
+        }
+        .stAppViewContainer > .main > div {
+            padding-top: 0rem !important;
         }
         body {
             background-color: #f4f8fc;
@@ -47,8 +53,10 @@ st.markdown("""
         }
         h1 {
             color: #2c3e50;
-            font-size: 1.2em;
+            font-size: 1.0em;
             text-align: center;
+            margin-top: 0px;
+            margin-bottom: 10px;
         }
         .section {
             background-color: #eaf2f8;
