@@ -41,17 +41,27 @@ st.markdown("""
         .viewerBadge_container__1QSob {
             display: none !important;
         }
-        .stAppViewContainer > .main {
+        /* Additional selectors to remove header box */
+        .stAppHeader {
+            display: none !important;
+        }
+        div[data-testid="stAppViewContainer"] > .main {
             padding-top: 0rem !important;
+            margin-top: 0rem !important;
         }
         .block-container {
             padding-top: 0rem !important;
+            margin-top: 0rem !important;
         }
         .element-container:first-child {
             margin-top: 0rem !important;
         }
         .stApp {
             margin-top: 0px !important;
+            padding-top: 0px !important;
+        }
+        .main .block-container {
+            padding-top: 0rem !important;
         }
         body {
             background-color: #f4f8fc;
@@ -71,14 +81,14 @@ st.markdown("""
             font-size: 28px !important;
             text-align: center !important;
             margin: 0px !important;
-            padding: 10px 0px !important;
+            padding: 5px 0px !important;
         }
         h1 {
             color: #2c3e50 !important;
             font-size: 28px !important;
             text-align: center !important;
             margin: 0px !important;
-            padding: 10px 0px !important;
+            padding: 5px 0px !important;
         }
         .section {
             background-color: #eaf2f8;
