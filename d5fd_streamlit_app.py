@@ -9,8 +9,11 @@ st.set_page_config(page_title="Core Ticketing - BTI Data Parser", layout="wide")
 # Inject custom CSS for styling and smaller fonts
 st.markdown("""
     <style>
+        /* Hide all possible header elements */
         header[data-testid="stHeader"] {
             display: none !important;
+            visibility: hidden !important;
+            height: 0 !important;
         }
         .stApp > header {
             display: none !important;
@@ -36,7 +39,10 @@ st.markdown("""
         .viewerBadge_container__1QSob {
             display: none !important;
         }
-        .stAppViewContainer > .main > div {
+        .stAppViewContainer > .main {
+            padding-top: 0rem !important;
+        }
+        .block-container {
             padding-top: 0rem !important;
         }
         body {
@@ -44,19 +50,19 @@ st.markdown("""
         }
         .main-container {
             background-color: #ffffff;
-            padding: 20px;
+            padding: 10px;
             border-radius: 5px;
             box-shadow: 0 0 5px rgba(0,0,0,0.1);
             max-width: 100%;
             margin: auto;
             font-size: 14px;
         }
-        h1 {
-            color: #2c3e50;
-            font-size: 1.0em;
-            text-align: center;
-            margin-top: 0px;
-            margin-bottom: 10px;
+        .main-container h1 {
+            color: #2c3e50 !important;
+            font-size: 16px !important;
+            text-align: center !important;
+            margin: 0px !important;
+            padding: 5px !important;
         }
         .section {
             background-color: #eaf2f8;
