@@ -9,13 +9,13 @@ st.set_page_config(page_title="Core Ticketing - BTI Data Parser", layout="wide")
 # Inject custom CSS for styling and smaller fonts
 st.markdown("""
     <style>
-        /* Completely hide and remove all header elements */
+        /* Completely hide all possible header elements */
         header[data-testid="stHeader"] {
             display: none !important;
             visibility: hidden !important;
             height: 0px !important;
-            min-height: 0px !important;
-            max-height: 0px !important;
+            position: absolute !important;
+            top: -9999px !important;
         }
         .stApp > header {
             display: none !important;
@@ -43,45 +43,42 @@ st.markdown("""
         }
         .stAppViewContainer > .main {
             padding-top: 0rem !important;
-            margin-top: 0rem !important;
         }
         .block-container {
             padding-top: 0rem !important;
+        }
+        .element-container:first-child {
             margin-top: 0rem !important;
         }
-        .element-container {
-            margin-top: 0rem !important;
+        .stApp {
+            margin-top: 0px !important;
         }
         body {
             background-color: #f4f8fc;
             margin-top: 0px !important;
-            padding-top: 0px !important;
         }
         .main-container {
             background-color: #ffffff;
-            padding: 10px;
+            padding: 20px;
             border-radius: 5px;
             box-shadow: 0 0 5px rgba(0,0,0,0.1);
             max-width: 100%;
             margin: 0 auto !important;
-            margin-top: 0px !important;
             font-size: 14px;
         }
         .main-container h1 {
             color: #2c3e50 !important;
-            font-size: 14px !important;
+            font-size: 28px !important;
             text-align: center !important;
             margin: 0px !important;
-            padding: 5px 0px !important;
-            line-height: 1.2 !important;
+            padding: 10px 0px !important;
         }
         h1 {
             color: #2c3e50 !important;
-            font-size: 14px !important;
+            font-size: 28px !important;
             text-align: center !important;
             margin: 0px !important;
-            padding: 5px 0px !important;
-            line-height: 1.2 !important;
+            padding: 10px 0px !important;
         }
         .section {
             background-color: #eaf2f8;
