@@ -59,7 +59,7 @@ st.markdown("""
         }
         .main-container h1 {
             color: white !important;
-            font-size: 10px !important;
+            font-size: 15px !important;
             text-align: center !important;
             margin: 0px !important;
             padding: 10px 0px !important;
@@ -68,7 +68,7 @@ st.markdown("""
         }
         h1 {
             color: white !important;
-            font-size: 10px !important;
+            font-size: 15px !important;
             text-align: center !important;
             margin: 0px !important;
             padding: 10px 0px !important;
@@ -77,7 +77,7 @@ st.markdown("""
         }
         h1 {
             color: white !important;
-            font-size: 10px !important;
+            font-size: 15px !important;
             text-align: center !important;
             margin: 0px !important;
             padding: 10px 0px !important;
