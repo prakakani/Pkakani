@@ -88,8 +88,11 @@ st.markdown("""
 def add_delta_logo():
     st.markdown("""
     <div style="display: flex; align-items: center; margin-bottom: 20px;">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Delta_logo.svg/320px-Delta_logo.svg.png" 
-             alt="Delta Airlines" style="height: 60px; margin-right: 20px;">
+        <div style="text-align: center; margin-right: 20px;">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Delta_logo.svg/320px-Delta_logo.svg.png" 
+                 alt="Delta Airlines" style="height: 40px; display: block;">
+            <p style="margin: 5px 0 0 0; color: #003366; font-size: 12px; font-weight: bold;">DELTA</p>
+        </div>
         <h1 style="color: #333; font-size: 28px; margin: 0; font-weight: bold;">Core Ticketing - BTI Data Parser</h1>
     </div>
     """, unsafe_allow_html=True)
