@@ -86,16 +86,22 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 def add_delta_logo():
-    st.markdown("""
-    <div style="display: flex; align-items: center; margin-bottom: 20px;">
-        <div style="text-align: center; margin-right: 20px;">
-            <img src="https://www.pngmart.com/files/22/Delta-Airlines-Logo-PNG-Transparent.png" 
-                 alt="Delta Airlines" style="height: 40px; display: block;">
-            <p style="margin: 5px 0 0 0; color: #003366; font-size: 12px; font-weight: bold;">DELTA</p>
-        </div>
-        <h1 style="color: #333; font-size: 28px; margin: 0; font-weight: bold;">Core Ticketing - BTI Data Parser</h1>
-    </div>
-    """, unsafe_allow_html=True)
+    col1, col2 = st.columns([1, 5])
+    with col1:
+        try:
+            st.image("delta_logo.png", width=80)
+        except:
+            st.markdown("""
+            <div style="text-align: center;">
+                <div style="width: 0; height: 0; border-left: 20px solid transparent; 
+                           border-right: 20px solid transparent; border-bottom: 35px solid #003366; 
+                           margin: 0 auto;"></div>
+                <p style="margin: 5px 0 0 0; color: #003366; font-size: 12px; font-weight: bold;">DELTA</p>
+            </div>
+            """, unsafe_allow_html=True)
+        st.markdown("<p style='text-align: center; color: #003366; font-size: 12px; font-weight: bold; margin-top: 5px;'>DELTA</p>", unsafe_allow_html=True)
+    with col2:
+        st.markdown("<h1 style='color: #333; font-size: 28px; margin-top: 15px; font-weight: bold;'>Core Ticketing - BTI Data Parser</h1>", unsafe_allow_html=True)
 
 def main():
     add_delta_logo()
