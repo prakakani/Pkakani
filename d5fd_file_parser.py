@@ -699,9 +699,9 @@ class D5FDFileParser:
         """Convert binary date to BCD format"""
         import datetime
         
-        # Unix epoch starts at January 1, 1970
-        epoch = datetime.date(1970, 1, 1)
-        target_date = epoch + datetime.timedelta(days=binary_date)
+        # January 3, 1966 is day number one
+        epoch = datetime.date(1966, 1, 3)
+        target_date = epoch + datetime.timedelta(days=binary_date - 1)
         
         months = "JANFEBMARAPRMAYJUNJULAUGSEPOCTNOVDEC"
         month_abbr = months[target_date.month * 3 - 3:target_date.month * 3]
