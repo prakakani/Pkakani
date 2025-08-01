@@ -675,7 +675,7 @@ class D5FDFileParser:
                       "ND5FDDTI", "ND5FDDCI", "ND5FDFDT"}
         
         # Check for date field conversion
-        if field_name in date_fields and field_type == "BIN" and len(field_data) == 2:
+        if field_name and field_name in date_fields and field_type == "BIN" and len(field_data) == 2:
             binary_date = int.from_bytes(field_data, 'big')
             if binary_date > 0:  # Only convert non-zero dates
                 return self.binary_to_bcd_date(binary_date, 7)  # Use 7-char format DDMMMYY
