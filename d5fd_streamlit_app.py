@@ -89,11 +89,11 @@ def add_delta_logo():
     col1, col2 = st.columns([1, 5])
     with col1:
         st.markdown("""
-        <div style="text-align: center;">
-            <div style="width: 0; height: 0; border-left: 25px solid transparent; 
-                       border-right: 25px solid transparent; border-bottom: 40px solid #003366; 
-                       margin: 10px auto;"></div>
-            <p style="margin: 5px 0 0 0; color: #003366; font-size: 12px; font-weight: bold;">DELTA</p>
+        <div style="text-align: center; padding: 10px;">
+            <div style="width: 50px; height: 40px; background: #003366; 
+                       clip-path: polygon(50% 0%, 0% 100%, 100% 100%); 
+                       margin: 0 auto;"></div>
+            <p style="margin: 8px 0 0 0; color: #003366; font-size: 12px; font-weight: bold;">DELTA</p>
         </div>
         """, unsafe_allow_html=True)
     with col2:
