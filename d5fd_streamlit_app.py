@@ -90,10 +90,8 @@ def add_delta_logo():
     with col1:
         st.markdown("""
         <div style="text-align: center; padding: 10px;">
-            <div style="width: 50px; height: 40px; background: #003366; 
-                       clip-path: polygon(50% 0%, 0% 100%, 100% 100%); 
-                       margin: 0 auto;"></div>
-            <p style="margin: 8px 0 0 0; color: #003366; font-size: 12px; font-weight: bold;">DELTA</p>
+            <div style="font-size: 40px; color: #CE1126; line-height: 1;">▲</div>
+            <p style="margin: 5px 0 0 0; color: #CE1126; font-size: 12px; font-weight: bold;">DELTA</p>
         </div>
         """, unsafe_allow_html=True)
     with col2:
