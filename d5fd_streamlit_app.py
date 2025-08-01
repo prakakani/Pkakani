@@ -89,7 +89,7 @@ def add_delta_logo():
     st.markdown("""
     <div style="display: flex; align-items: center; margin-bottom: 20px;">
         <div style="text-align: center; margin-right: 20px;">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Delta_logo.svg/320px-Delta_logo.svg.png" 
+            <img src="https://www.pngmart.com/files/22/Delta-Airlines-Logo-PNG-Transparent.png" 
                  alt="Delta Airlines" style="height: 40px; display: block;">
             <p style="margin: 5px 0 0 0; color: #003366; font-size: 12px; font-weight: bold;">DELTA</p>
         </div>
