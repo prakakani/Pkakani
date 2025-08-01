@@ -88,8 +88,14 @@ st.markdown("""
 def add_delta_logo():
     col1, col2 = st.columns([1, 5])
     with col1:
-        st.image("delta_logo.png", width=80)
-        st.markdown("<p style='text-align: center; color: #003366; font-size: 12px; font-weight: bold; margin-top: 5px;'>DELTA</p>", unsafe_allow_html=True)
+        st.markdown("""
+        <div style="text-align: center;">
+            <div style="width: 0; height: 0; border-left: 25px solid transparent; 
+                       border-right: 25px solid transparent; border-bottom: 40px solid #003366; 
+                       margin: 10px auto;"></div>
+            <p style="margin: 5px 0 0 0; color: #003366; font-size: 12px; font-weight: bold;">DELTA</p>
+        </div>
+        """, unsafe_allow_html=True)
     with col2:
         st.markdown("<h1 style='color: #333; font-size: 28px; margin-top: 15px; font-weight: bold;'>Core Ticketing - BTI Data Parser</h1>", unsafe_allow_html=True)
 
