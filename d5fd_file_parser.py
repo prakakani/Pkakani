@@ -678,7 +678,7 @@ class D5FDFileParser:
         if field_name and field_name in date_fields and field_type == "BIN" and len(field_data) == 2:
             binary_date = int.from_bytes(field_data, 'big')
             if binary_date > 0:  # Only convert non-zero dates
-                return self.binary_to_bcd_date(binary_date, 7)  # Use 7-char format DDMMMYY
+                return self.binary_to_bcd_date(binary_date, 6)  # Use 6-char format MMDDYY
             else:
                 return "0"
         
@@ -695,25 +695,29 @@ class D5FDFileParser:
         else:
             return field_data.hex().upper()
 
-    def binary_to_bcd_date(self, binary_date, format_size=5):
+    def binary_to_bcd_date(self, binary_date, format_size=6):
         """Convert binary date to BCD format"""
         import datetime
         
-        # January 3, 1966 is day number one
-        epoch = datetime.date(1966, 1, 3)
+        # December 31, 1962 is day number zero (day 1 = January 1, 1963)
+        epoch = datetime.date(1962, 12, 31)
         target_date = epoch + datetime.timedelta(days=binary_date - 1)
         
-        months = "JANFEBMARAPRMAYJUNJULAUGSEPOCTNOVDEC"
-        month_abbr = months[target_date.month * 3 - 3:target_date.month * 3]
-        
-        if format_size == 5:  # DDMMM
-            return f"{target_date.day:02d}{month_abbr}"
-        elif format_size == 7:  # DDMMMYY
-            return f"{target_date.day:02d}{month_abbr}{target_date.year % 100:02d}"
-        elif format_size == 9:  # DDMMMYYYY
-            return f"{target_date.day:02d}{month_abbr}{target_date.year}"
+        if format_size == 6:  # MMDDYY
+            return f"{target_date.month:02d}{target_date.day:02d}{target_date.year % 100:02d}"
         else:
-            return f"{target_date.day:02d}{month_abbr}"
+            # Legacy formats for backward compatibility
+            months = "JANFEBMARAPRMAYJUNJULAUGSEPOCTNOVDEC"
+            month_abbr = months[target_date.month * 3 - 3:target_date.month * 3]
+            
+            if format_size == 5:  # DDMMM
+                return f"{target_date.day:02d}{month_abbr}"
+            elif format_size == 7:  # DDMMMYY
+                return f"{target_date.day:02d}{month_abbr}{target_date.year % 100:02d}"
+            elif format_size == 9:  # DDMMMYYYY
+                return f"{target_date.day:02d}{month_abbr}{target_date.year}"
+            else:
+                return f"{target_date.day:02d}{month_abbr}"
 
     def is_blank_field(self, field_data):
         """Check if field contains all EBCDIC spaces (0x40)"""
