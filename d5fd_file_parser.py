@@ -696,12 +696,12 @@ class D5FDFileParser:
             return field_data.hex().upper()
 
     def binary_to_bcd_date(self, binary_date, format_size=5):
-        """Convert PARS binary date to BCD format"""
+        """Convert binary date to BCD format"""
         import datetime
         
-        # PARS epoch starts at January 1, 1900
-        pars_epoch = datetime.date(1900, 1, 1)
-        target_date = pars_epoch + datetime.timedelta(days=binary_date)
+        # Unix epoch starts at January 1, 1970
+        epoch = datetime.date(1970, 1, 1)
+        target_date = epoch + datetime.timedelta(days=binary_date)
         
         months = "JANFEBMARAPRMAYJUNJULAUGSEPOCTNOVDEC"
         month_abbr = months[target_date.month * 3 - 3:target_date.month * 3]
