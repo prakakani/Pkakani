@@ -198,7 +198,9 @@ def format_output_with_dynamic_widths(output_text):
             total_width = max_field_width + max_offset_width + max_length_width + max_hex_width + max_value_width + 15
             processed_lines.append('-' * min(total_width, 120))
         elif line.startswith('='):
-            processed_lines.append('=' * 120)
+            # Create dynamic separator for equals
+            total_width = max_field_width + max_offset_width + max_length_width + max_hex_width + max_value_width + 15
+            processed_lines.append('=' * min(total_width, 120))
         else:
             # Check if this is a data line we parsed
             found_data = False
