@@ -219,9 +219,20 @@ def format_output_with_dynamic_widths(output_text):
     
     return '\n'.join(processed_lines)
 
+def add_delta_logo():
+    logo_html = """
+    <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 20px; padding: 15px; background: linear-gradient(90deg, #003366, #0066cc); border-radius: 10px;">
+        <div style="color: white; text-align: center; font-family: Arial, sans-serif;">
+            <h1 style="margin: 0; color: white; font-size: 28px; font-weight: bold;">✈️ DELTA AIR LINES</h1>
+            <p style="margin: 5px 0 0 0; color: #ccddff; font-size: 16px;">Core Ticketing - BTI Data Parser</p>
+        </div>
+    </div>
+    """
+    st.markdown(logo_html, unsafe_allow_html=True)
+
 def main():
     st.markdown("<div class='main-container'>", unsafe_allow_html=True)
-    st.markdown("<h1>Core Ticketing - BTI Data Parser</h1>", unsafe_allow_html=True)
+    add_delta_logo()
     st.markdown("<div class='section'>", unsafe_allow_html=True)
     st.write("Choose an input method to provide BTI hex data for parsing.")
 
