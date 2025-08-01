@@ -86,13 +86,14 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 def add_delta_logo():
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col2:
+    col1, col2 = st.columns([1, 4])
+    with col1:
         try:
-            st.image("delta_logo.png", width=200)
+            st.image("delta_logo.png", width=120)
         except:
-            st.markdown("<div style='text-align: center; background: #003366; color: white; padding: 20px; border-radius: 10px; margin-bottom: 10px;'><h2>🔺 DELTA</h2></div>", unsafe_allow_html=True)
-        st.markdown("<p style='text-align: center; color: #333; font-size: 18px; margin-top: 10px; font-weight: bold;'>Core Ticketing - BTI Data Parser</p>", unsafe_allow_html=True)
+            st.markdown("<div style='background: #003366; color: white; padding: 10px; border-radius: 5px;'><h3>🔺 DELTA</h3></div>", unsafe_allow_html=True)
+    with col2:
+        st.markdown("<h1 style='color: #333; font-size: 28px; margin-top: 20px; font-weight: bold;'>Core Ticketing - BTI Data Parser</h1>", unsafe_allow_html=True)
 
 def main():
     add_delta_logo()
