@@ -668,7 +668,17 @@ class D5FDFileParser:
         except:
             return data.hex().upper()
 
-    def format_value(self, field_data, field_type):
+    def format_value(self, field_data, field_type, field_name=None):
+        # Date fields that should use BCD conversion
+        date_fields = {"ND5FDDTE", "ND5FDXLD", "ND5FDXFD", "ND5FDXOD", "ND5FDVVD", 
+                      "ND5FDVEP", "ND5FDBNT", "ND5FDMDT", "ND5FDMFD", "ND5FDVCD", 
+                      "ND5FDDTI", "ND5FDDCI", "ND5FDFDT"}
+        
+        if field_name in date_fields and field_type == "BIN" and len(field_data) == 2:
+            binary_date = int.from_bytes(field_data, 'big')
+            if binary_date > 0:  # Only convert non-zero dates
+                return f"{binary_date} ({self.binary_to_bcd_date(binary_date)})"
+        
         if field_type == "CHAR":
             return self.ebcdic_to_ascii(field_data)
         elif field_type == "BIN":
@@ -861,7 +871,7 @@ class D5FDFileParser:
             if offset + length <= len(data):
                 field_data = data[offset:offset + length]
                 hex_value = field_data.hex().upper()
-                formatted_value = self.format_value(field_data, field_type)
+                formatted_value = self.format_value(field_data, field_type, field_name)
                 output_file.write(f"{field_name:<{config.get('field_width', 8)}} {offset:04X}h {length:<{config.get('length_width', 4)}} {hex_value:<{config['hex_width']}} {formatted_value:<{config['value_width']}} {description}\n")
 
 
@@ -921,13 +931,33 @@ class D5FDFileParser:
                 if self.is_blank_or_zero_field(field_data):
                     continue
                 hex_value = field_data.hex().upper()
-                formatted_value = self.format_value(field_data, field_type)
+                formatted_value = self.format_value(field_data, field_type, field_name)
                 output_file.write(f"{field_name:<{config.get('field_width', 8)}} {abs_offset:04X}h {length:<{config.get('length_width', 4)}} {hex_value:<{config['hex_width']}} {formatted_value:<{config['value_width']}} {description}\n")
 
         # Parse variable length data items for TAR and PAR records
         variable_offset = self.get_variable_data_offset(record_type)
         if variable_offset and variable_offset < len(data):
             self.parse_variable_data_items(data, variable_offset, output_file)
+
+    def binary_to_bcd_date(self, binary_date, format_size=5):
+        """Convert binary date (days since epoch) to BCD format"""
+        import datetime
+        
+        # Convert binary date to actual date
+        epoch = datetime.date(1970, 1, 1)
+        target_date = epoch + datetime.timedelta(days=binary_date)
+        
+        months = "JANFEBMARAPRMAYJUNJULAUGSEPOCTNOVDEC"
+        month_abbr = months[target_date.month * 3 - 3:target_date.month * 3]
+        
+        if format_size == 5:  # DDMMM
+            return f"{target_date.day:02d}{month_abbr}"
+        elif format_size == 7:  # DDMMMYY
+            return f"{target_date.day:02d}{month_abbr}{target_date.year % 100:02d}"
+        elif format_size == 9:  # DDMMMYYYY
+            return f"{target_date.day:02d}{month_abbr}{target_date.year}"
+        else:
+            return f"{target_date.day:02d}{month_abbr}"
 
     def parse_record_to_file(self, hex_input, output_file):
         try:
