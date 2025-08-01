@@ -677,7 +677,9 @@ class D5FDFileParser:
         if field_name in date_fields and field_type == "BIN" and len(field_data) == 2:
             binary_date = int.from_bytes(field_data, 'big')
             if binary_date > 0:  # Only convert non-zero dates
-                return f"{binary_date} ({self.binary_to_bcd_date(binary_date)})"
+                return self.binary_to_bcd_date(binary_date, 7)  # Use 7-char format DDMMMYY
+            else:
+                return str(binary_date)
         
         if field_type == "CHAR":
             return self.ebcdic_to_ascii(field_data)
