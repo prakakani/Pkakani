@@ -220,19 +220,15 @@ def format_output_with_dynamic_widths(output_text):
     return '\n'.join(processed_lines)
 
 def add_delta_logo():
-    logo_html = """
-    <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 20px; padding: 15px; background: white; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-        <div style="text-align: center;">
-            <img src="https://www.stickpng.com/assets/images/580b57fcd9996e24bc43c513.png" alt="Delta Airlines" style="height: 60px; margin-bottom: 10px;">
-            <p style="margin: 0; color: #333; font-size: 16px; font-family: Arial, sans-serif;">Core Ticketing - BTI Data Parser</p>
-        </div>
-    </div>
-    """
-    st.markdown(logo_html, unsafe_allow_html=True)
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        st.image("delta_logo.png", width=200)
+        st.markdown("<p style='text-align: center; color: #333; font-size: 18px; margin-top: 10px; font-weight: bold;'>Core Ticketing - BTI Data Parser</p>", unsafe_allow_html=True)
 
 def main():
     st.markdown("<div class='main-container'>", unsafe_allow_html=True)
     add_delta_logo()
+    st.markdown("<hr style='margin: 20px 0;'>", unsafe_allow_html=True)
     st.markdown("<div class='section'>", unsafe_allow_html=True)
     st.write("Choose an input method to provide BTI hex data for parsing.")
 
