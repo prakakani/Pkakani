@@ -674,12 +674,13 @@ class D5FDFileParser:
                       "ND5FDVEP", "ND5FDBNT", "ND5FDMDT", "ND5FDMFD", "ND5FDVCD", 
                       "ND5FDDTI", "ND5FDDCI", "ND5FDFDT"}
         
+        # Check for date field conversion
         if field_name in date_fields and field_type == "BIN" and len(field_data) == 2:
             binary_date = int.from_bytes(field_data, 'big')
             if binary_date > 0:  # Only convert non-zero dates
                 return self.binary_to_bcd_date(binary_date, 7)  # Use 7-char format DDMMMYY
             else:
-                return str(binary_date)
+                return "0"
         
         if field_type == "CHAR":
             return self.ebcdic_to_ascii(field_data)
@@ -693,6 +694,26 @@ class D5FDFileParser:
             return "(SPARE)"
         else:
             return field_data.hex().upper()
+
+    def binary_to_bcd_date(self, binary_date, format_size=5):
+        """Convert PARS binary date to BCD format"""
+        import datetime
+        
+        # PARS epoch starts at January 1, 1900
+        pars_epoch = datetime.date(1900, 1, 1)
+        target_date = pars_epoch + datetime.timedelta(days=binary_date)
+        
+        months = "JANFEBMARAPRMAYJUNJULAUGSEPOCTNOVDEC"
+        month_abbr = months[target_date.month * 3 - 3:target_date.month * 3]
+        
+        if format_size == 5:  # DDMMM
+            return f"{target_date.day:02d}{month_abbr}"
+        elif format_size == 7:  # DDMMMYY
+            return f"{target_date.day:02d}{month_abbr}{target_date.year % 100:02d}"
+        elif format_size == 9:  # DDMMMYYYY
+            return f"{target_date.day:02d}{month_abbr}{target_date.year}"
+        else:
+            return f"{target_date.day:02d}{month_abbr}"
 
     def is_blank_field(self, field_data):
         """Check if field contains all EBCDIC spaces (0x40)"""
@@ -940,26 +961,6 @@ class D5FDFileParser:
         variable_offset = self.get_variable_data_offset(record_type)
         if variable_offset and variable_offset < len(data):
             self.parse_variable_data_items(data, variable_offset, output_file)
-
-    def binary_to_bcd_date(self, binary_date, format_size=5):
-        """Convert PARS binary date to BCD format"""
-        import datetime
-        
-        # PARS epoch starts at January 1, 1900
-        pars_epoch = datetime.date(1900, 1, 1)
-        target_date = pars_epoch + datetime.timedelta(days=binary_date)
-        
-        months = "JANFEBMARAPRMAYJUNJULAUGSEPOCTNOVDEC"
-        month_abbr = months[target_date.month * 3 - 3:target_date.month * 3]
-        
-        if format_size == 5:  # DDMMM
-            return f"{target_date.day:02d}{month_abbr}"
-        elif format_size == 7:  # DDMMMYY
-            return f"{target_date.day:02d}{month_abbr}{target_date.year % 100:02d}"
-        elif format_size == 9:  # DDMMMYYYY
-            return f"{target_date.day:02d}{month_abbr}{target_date.year}"
-        else:
-            return f"{target_date.day:02d}{month_abbr}"
 
     def parse_record_to_file(self, hex_input, output_file):
         try:
