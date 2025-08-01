@@ -221,10 +221,10 @@ def format_output_with_dynamic_widths(output_text):
 
 def add_delta_logo():
     logo_html = """
-    <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 20px; padding: 15px; background: linear-gradient(90deg, #003366, #0066cc); border-radius: 10px;">
-        <div style="color: white; text-align: center; font-family: Arial, sans-serif;">
-            <h1 style="margin: 0; color: white; font-size: 28px; font-weight: bold;">✈️ DELTA AIR LINES</h1>
-            <p style="margin: 5px 0 0 0; color: #ccddff; font-size: 16px;">Core Ticketing - BTI Data Parser</p>
+    <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 20px; padding: 15px; background: white; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+        <div style="text-align: center;">
+            <img src="https://www.stickpng.com/assets/images/580b57fcd9996e24bc43c513.png" alt="Delta Airlines" style="height: 60px; margin-bottom: 10px;">
+            <p style="margin: 0; color: #333; font-size: 16px; font-family: Arial, sans-serif;">Core Ticketing - BTI Data Parser</p>
         </div>
     </div>
     """
