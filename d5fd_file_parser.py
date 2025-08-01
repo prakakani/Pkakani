@@ -668,10 +668,26 @@ class D5FDFileParser:
         except:
             return data.hex().upper()
 
-    def format_value(self, field_data, field_type):
+    def format_date(self, field_data):
+        """Convert binary date to readable format"""
+        try:
+            if len(field_data) == 2:
+                days = int.from_bytes(field_data, 'big')
+                if days > 0:
+                    from datetime import datetime, timedelta
+                    epoch = datetime(1900, 1, 1)
+                    date = epoch + timedelta(days=days)
+                    return f"{date.strftime('%Y-%m-%d')} ({days})"
+            return str(int.from_bytes(field_data, 'big'))
+        except:
+            return str(int.from_bytes(field_data, 'big'))
+
+    def format_value(self, field_data, field_type, field_name=""):
         if field_type == "CHAR":
             return self.ebcdic_to_ascii(field_data)
         elif field_type == "BIN":
+            if "DATE" in field_name.upper() or "DTE" in field_name.upper():
+                return self.format_date(field_data)
             return str(int.from_bytes(field_data, 'big'))
         elif field_type == "PIC":
             return self.ebcdic_to_ascii(field_data)
@@ -861,7 +877,7 @@ class D5FDFileParser:
             if offset + length <= len(data):
                 field_data = data[offset:offset + length]
                 hex_value = field_data.hex().upper()
-                formatted_value = self.format_value(field_data, field_type)
+                formatted_value = self.format_value(field_data, field_type, field_name)
                 output_file.write(f"{field_name:<{config.get('field_width', 8)}} {offset:04X}h {length:<{config.get('length_width', 4)}} {hex_value:<{config['hex_width']}} {formatted_value:<{config['value_width']}} {description}\n")
 
 
@@ -921,7 +937,7 @@ class D5FDFileParser:
                 if self.is_blank_or_zero_field(field_data):
                     continue
                 hex_value = field_data.hex().upper()
-                formatted_value = self.format_value(field_data, field_type)
+                formatted_value = self.format_value(field_data, field_type, field_name)
                 output_file.write(f"{field_name:<{config.get('field_width', 8)}} {abs_offset:04X}h {length:<{config.get('length_width', 4)}} {hex_value:<{config['hex_width']}} {formatted_value:<{config['value_width']}} {description}\n")
 
         # Parse variable length data items for TAR and PAR records
