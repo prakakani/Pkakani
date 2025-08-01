@@ -269,6 +269,29 @@ def main():
     st.markdown("</div>", unsafe_allow_html=True)
 
 if __name__ == "__main__":
+    main()ext_area("Paste hex data here", height=250)
+        parse_clicked = st.button("Parse Data")
+
+    st.markdown("</div>", unsafe_allow_html=True)
+
+    if hex_data and parse_clicked:
+        parser = D5FDFileParser()
+        output_buffer = io.StringIO()
+        parser.parse_record_to_file(hex_data, output_buffer)
+        output_text = output_buffer.getvalue()
+
+        # Format with dynamic column widths
+        formatted_output = format_output_with_dynamic_widths(output_text)
+
+        st.markdown("<div class='section'>", unsafe_allow_html=True)
+        st.subheader("Parsed Output")
+        st.code(formatted_output, language=None)
+        st.download_button("Download Output", output_text, file_name="parsed_output.txt", mime="text/plain")
+        st.markdown("</div>", unsafe_allow_html=True)
+
+    st.markdown("</div>", unsafe_allow_html=True)
+
+if __name__ == "__main__":
     main()r = io.StringIO()
         parser.parse_record_to_file(hex_data, output_buffer)
         output_text = output_buffer.getvalue()
