@@ -668,6 +668,35 @@ class D5FDFileParser:
         except:
             return data.hex().upper()
 
+    def parse_credit_card_restrictions(self, field_data):
+        """Parse Credit Card Restrictions bit field"""
+        if len(field_data) != 1:
+            return "Invalid length"
+            
+        byte_value = field_data[0]
+        restrictions = []
+        
+        # Bit mappings for Credit Card Restrictions
+        bit_mappings = {
+            0x80: "World Pay Restricted Country",  # Bit 0
+            0x40: "Elavon",                        # Bit 1  
+            0x20: "American Express",              # Bit 2
+            0x10: "Visa",                          # Bit 3
+            0x08: "Chase (Bank)",                  # Bit 4
+            0x04: "Converge",                      # Bit 5
+            0x02: "SITA",                          # Bit 6
+            0x01: "World Pay Currency"             # Bit 7
+        }
+        
+        for bit_mask, description in bit_mappings.items():
+            if byte_value & bit_mask:
+                restrictions.append(description)
+        
+        if restrictions:
+            return f"0x{byte_value:02X} ({', '.join(restrictions)})"
+        else:
+            return f"0x{byte_value:02X} (No restrictions)"
+
     def format_value(self, field_data, field_type, field_name=None):
         # Date fields that should use BCD conversion
         date_fields = {"ND5FDDTE", "ND5FDXLD", "ND5FDXFD", "ND5FDXOD", "ND5FDVVD", 
@@ -687,8 +716,18 @@ class D5FDFileParser:
         elif field_type == "BIN":
             return str(int.from_bytes(field_data, 'big'))
         elif field_type == "PIC":
+            # Handle PIC format for monetary amounts
+            hex_str = field_data.hex().upper()
+            # Extract digits from F0 prefixed bytes (F0 = EBCDIC '0', F1 = EBCDIC '1', etc.)
+            digits = ''.join([hex_str[i+1] for i in range(0, len(hex_str), 2) if hex_str[i] == 'F'])
+            if digits and digits.isdigit() and len(digits) >= 2:
+                value = int(digits) / 100.0  # Assume 2 decimal places
+                return f"{value:.2f}"
             return self.ebcdic_to_ascii(field_data)
         elif field_type == "BIT":
+            # Special handling for Credit Card Restrictions fields
+            if field_name and "CCP" in field_name or "CRD" in field_name or "ARF" in field_name:
+                return self.parse_credit_card_restrictions(field_data)
             return field_data.hex().upper()
         elif field_type == "SPARE":
             return "(SPARE)"
@@ -733,6 +772,99 @@ class D5FDFileParser:
             type_data = data[0x020:0x023]
             return self.ebcdic_to_ascii(type_data).strip()
         return "UNK"
+
+    def parse_reps_data(self, reps_data, output_file):
+        """Parse REPS data (item 71) with up to 221 bytes structure"""
+        output_file.write(f"    REPS Data Structure ({len(reps_data)} bytes available):\n")
+        
+        if len(reps_data) == 0:
+            output_file.write("    No REPS data available\n")
+            return
+        offset = 0
+        
+        # REPS field definitions
+        reps_fields = [
+            ("Auth Characteristics Indicator", 1),
+            ("Validation Code", 4),
+            ("Trans ID/Banknet Reference", 9),
+            ("Auth Response/Downgrade Indicator", 2),
+            ("Auth Source Code", 1),
+            ("POS Entry Mode", 2),
+            ("Banknet Reference Date", 2),
+            ("AVS Response Code", 1),
+            ("Electronic Commerce Indicator", 2),
+            ("Cardholder Auth Verification Value", 1),
+            ("Cardholder Activation Terminal ID", 1),
+            ("Card Level Results", 2),
+            ("Acquirer Reference Data", 15),
+            ("Point of Service Data", 12),
+            ("Accounting System Code/Cardholder ID", 1),
+            ("Last Four Digits of Credit Card", 4),
+            ("Account Status Data", 1),
+            ("Spare Bytes", 9),
+            ("Token Requestor ID Data", 11),
+            ("Token Assurance Level Data", 2),
+            ("Spend Qualified Indicator", 1),
+            ("Security Protocol", 1),
+            ("Transaction Integrity Class", 2),
+            ("Payment Account Reference Number", 35),
+            ("Market Specific Auth Data Indicator", 1),
+            ("System Trace Audit Number", 6),
+            ("Transaction Data Condition Code", 2),
+            ("POS Data", 13),
+            ("Processing Code", 6),
+            ("Cardholder Authentication", 1),
+            ("Stored Credential Indicator", 1),
+            ("Account Holder Auth Value", 32),
+            ("Directory Server Transaction ID", 36),
+            ("Program Protocol", 1)
+        ]
+        
+        for field_name, field_length in reps_fields:
+            if offset + field_length <= len(reps_data):
+                field_data = reps_data[offset:offset + field_length]
+                hex_value = field_data.hex().upper()
+                ascii_value = self.ebcdic_to_ascii(field_data)
+                output_file.write(f"      {field_name:<35} ({field_length:2d}): {hex_value:<20} {ascii_value}\n")
+                offset += field_length
+            else:
+                break
+
+    def parse_itinerary_segments(self, segment_data, output_file):
+        """Parse itinerary segment data (item 74) - 26 bytes per segment"""
+        output_file.write("    Itinerary Segment Data (26 bytes per segment):\n")
+        
+        segment_length = 26
+        num_segments = len(segment_data) // segment_length
+        
+        for segment_num in range(num_segments):
+            offset = segment_num * segment_length
+            if offset + segment_length <= len(segment_data):
+                segment = segment_data[offset:offset + segment_length]
+                output_file.write(f"\n      Segment {segment_num + 1}:\n")
+                
+                # Parse each field in the 26-byte segment
+                field_offset = 0
+                segment_fields = [
+                    ("Carrier Code", 3),
+                    ("Flight Number", 4),
+                    ("Class of Service", 2),
+                    ("Departure Date", 5),
+                    ("Departure Time", 4),
+                    ("Origin City Code", 3),
+                    ("Destination City Code", 3),
+                    ("Reservation Status", 2)
+                ]
+                
+                for field_name, field_length in segment_fields:
+                    if field_offset + field_length <= len(segment):
+                        field_data = segment[field_offset:field_offset + field_length]
+                        hex_value = field_data.hex().upper()
+                        ascii_value = self.ebcdic_to_ascii(field_data)
+                        output_file.write(f"        {field_name:<20} ({field_length}): {hex_value:<12} {ascii_value}\n")
+                        field_offset += field_length
+                    else:
+                        break
 
     def parse_variable_data_items(self, data, start_offset, output_file):
         """Parse variable length data items (ND5FDITM)"""
@@ -861,6 +993,17 @@ class D5FDFileParser:
                 ascii_value = self.ebcdic_to_ascii(item_data)
                 output_file.write(f"  Data:         {hex_value}\n")
                 output_file.write(f"  ASCII:        {ascii_value}\n")
+                
+                # Special handling for REPS data (item 71 = 0x47)
+                if type_id == 0x47:
+                    output_file.write("\n")
+                    output_file.write(f"  REPS Data detected (length: {data_length} bytes)\n")
+                    self.parse_reps_data(item_data, output_file)
+                
+                # Special handling for Itinerary Segment data (item 74 = 0x4A)
+                elif type_id == 0x4A and data_length >= 26:
+                    output_file.write("\n")
+                    self.parse_itinerary_segments(item_data, output_file)
         
             # Move to next item using total length
             current_offset += total_length
